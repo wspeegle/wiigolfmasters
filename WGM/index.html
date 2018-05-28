@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+        <?php
+        $host_name = 'db721809567.db.1and1.com';
+        $database = 'db721809567';
+        $user_name = 'dbo721809567';
+        $password = 'Captain123';
+        $connect = mysqli_connect($host_name, $user_name, $password, $database);
+        
+        if (mysqli_connect_errno()) {
+            die('<p>Failed to connect to MySQL: '.mysqli_connect_error().'</p>');
+        } else {
+            echo '<p>Connection to MySQL server successfully established.</p >';
+        }
+        ?>
+<div style="display: flex; justify-content: center">
+<img src="images/WGM_50.png">
+</div>
+</body>
+</html>

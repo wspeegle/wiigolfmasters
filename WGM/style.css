@@ -661,6 +661,32 @@ z-index: -2;
     z-index: -1;
 }
 
+.tee_time_box
+{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #e8e8e8;
+    margin: 10px;
+    padding-left: 10px;
+
+}
+
+.tee_time{
+    font-size: 30px;
+    text-align: center;
+    padding-top: 5px;
+    color: #076652;
+}
+
+.tee_time_list{
+    font-size: 20px;
+    text-align: center;
+    list-style-type: none;
+    padding-top: 15px;
+    margin: auto;
+    font-family: "Tiempos Text", Times New Roman, serif;
+}
+
 
 @media (max-device-width: 900px)
 {

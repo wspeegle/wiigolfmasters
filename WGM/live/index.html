@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+  <script src="/__/firebase/7.8.0/firebase-app.js"></script>
+  <script src="/__/firebase/7.8.0/firebase-analytics.js"></script>
+  <script src="/__/firebase/7.8.0/firebase-auth.js"></script>
+  <script src="/__/firebase/7.8.0/firebase-firestore.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+
+
+<html>
+  v2.0 <button onclick='signOut()'>Sign Out</button> <button onclick='signIn()'>Sign In </button>
+  <br>
+  <div id='userInfo'></div>
+
+  <select id='userSelect'></select>
+
+  <script>
+
+
+// Initialize Cloud Firestore through Firebase
+firebase.initializeApp({
+  apiKey: "AIzaSyB3qmQNbtcpQeLSn3mHsAoYtDxGL-uHL6c",
+  authDomain: "wiigolfmasters.firebaseapp.com",
+  databaseURL: "https://wiigolfmasters.firebaseio.com",
+  projectId: "wiigolfmasters",
+  storageBucket: "wiigolfmasters.appspot.com",
+  messagingSenderId: "660957033972",
+  appId: "1:660957033972:web:59179876aae65a91b875a1",
+  measurementId: "G-8TGBMCXL58"
+});
+$(document).ready(function(){
+
+
+  var user = null;
+firebase.auth().getRedirectResult().then(function(result) {
+  if (result.credential) {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    var token = result.credential.accessToken;
+    // ...
+  }
+  // The signed-in user info.
+ user = result.user;
+
+  
+}).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // The email of the user's account used.
+  var email = error.email;
+  // The firebase.auth.AuthCredential type that was used.
+  var credential = error.credential;
+  // ...
+});
+user = firebase.auth().currentUser;
+var userDiv = document.getElementById('userInfo');
+firebase.auth().onAuthStateChanged(function(user) {
+  if(user)
+  {
+    userDiv.innerHTML = user["displayName"];
+  }else{
+    userDiv.innerHTML = "Not logged in";
+  }
+});
+console.log("user::::");
+  console.log(user);
+ 
+var db = firebase.firestore();
+db.collection("players").get().then(function(querySnapshot) {
+  var userSelect = document.getElementById('userSelect');
+    querySnapshot.forEach(function(doc) {
+        // doc.data() is never undefined for query doc snapshots
+        console.log(doc.id, " => ", doc.data());
+        var doc_data = doc.data();
+        var opt = document.createElement('option');
+        console.log(doc);
+        opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
+        opt.value = doc.id;
+        userSelect.appendChild(opt);
+        
+
+    });
+}).catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  // The email of the user's account used.
+  var email = error.email;
+  // The firebase.auth.AuthCredential type that was used.
+  var credential = error.credential;
+  console.log(errorMessage);
+});;
+});
+  
+function signOut()
+{
+  firebase.auth().signOut().then(function() {
+  // Sign-out successful.
+}).catch(function(error) {
+  // An error happened.
+});
+}
+
+function signIn()
+{
+  var provider = new firebase.auth.GoogleAuthProvider();
+console.log("signinwithredirect");
+firebase.auth().signInWithRedirect(provider);
+}
+  </script>
+  
+</html>

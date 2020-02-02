@@ -1,6 +1,14 @@
 <!DOCTYPE html>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script type="text/javascript" src="db_utils.js"></script>
 <html>
 <link rel="stylesheet" type="text/css" href="/style.css" />
+
+
 <title>2019 Wii Golf Masters</title>
 
 <body>
@@ -8,19 +16,11 @@
         <div w3-include-html="/nav.html"></div>
 
         <div class="player_container">
-
-
                 <br>
                 <br>
-
-
-
-
-
-             
                     <form>
-                
-                        <table class="player_card">
+                        <select id='round_select'></select>
+                        <table id = 'update_scores' class="player_card">
                             <colgroup>
                                     <col style="width: 80px">
                                     <col style="width: 41px">
@@ -87,48 +87,121 @@
                                     <td class="parNos">5</td>
                                     <td class="parNos">72</td>
                             </tr>
-                            <tr>
-                                    <td class="roundNo">R1</td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="roundNo"></td>
-                            </tr>
+                            
 
                     </table>
+                    <br>
+                    <input type="button" value='Add Player' onclick ='addRow()' style='float:left;'>
+
+                    <input type="button" value='Update' onclick ='update_scorecard()' style='float:left;'>
                         </form>
-                        <br>
-                        <br>
-                        
-
-
-
-                
-                        
-                        <br>
-                        <br>
-                        
-               
-                <br>
-                <br>
-
 </body>
 
-
-
 </html>
+
+<script>
+// Initialize Cloud Firestore through Firebase
+firebase.initializeApp({
+  apiKey: "AIzaSyB3qmQNbtcpQeLSn3mHsAoYtDxGL-uHL6c",
+  authDomain: "wiigolfmasters.firebaseapp.com",
+  databaseURL: "https://wiigolfmasters.firebaseio.com",
+  projectId: "wiigolfmasters",
+  storageBucket: "wiigolfmasters.appspot.com",
+  messagingSenderId: "660957033972",
+  appId: "1:660957033972:web:59179876aae65a91b875a1",
+  measurementId: "G-8TGBMCXL58"
+});
+
+getData("round", function(querySnapshot){
+    var roundSelect = document.getElementById('round_select');
+    var opt = document.createElement('option');
+    opt.appendChild(document.createTextNode("-"));
+    roundSelect.appendChild(opt);
+        querySnapshot.forEach(function(doc) {
+            var doc_data = doc.data();
+            opt = document.createElement('option');
+            console.log(doc);
+            opt.appendChild(document.createTextNode(doc_data.year + ":" + doc_data.round_num));
+            opt.value = doc.id;
+            roundSelect.appendChild(opt);
+        }); 
+});
+
+
+
+
+function addRow()
+{
+    var table = document.getElementById('update_scores');
+    
+    var row = table.insertRow();
+    var row_num = table.rows.length;
+    var cell = row.insertCell();
+    cell.innerHTML = "<select id='userSelect_" + row_num + "'>";
+    cell.className = 'roundNo';
+    for(var i = 0; i < 18; i++)
+    {
+        cell = row.insertCell();
+        cell.className = 'scoreNos';
+        cell.innerHTML = "<input style='width: 25px; height:25px' type='text'>";
+    }
+
+    getData("players", function(querySnapshot){
+    var userSelect = document.getElementById('userSelect_'+row_num);
+    var opt = document.createElement('option');
+    opt.appendChild(document.createTextNode("-"));
+    userSelect.appendChild(opt);
+        querySnapshot.forEach(function(doc) {
+            var doc_data = doc.data();
+            opt = document.createElement('option');
+            console.log(doc);
+            opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
+            opt.value = doc.id;
+            userSelect.appendChild(opt);
+        }); 
+});
+}
+
+function update_scorecard()
+{
+    var db = firebase.firestore();
+    var roundSelect = document.getElementById('round_select');
+    var round_id = roundSelect[roundSelect.selectedIndex].value;
+    
+    var userSelect = document.getElementById('userSelect_3');
+    var user_id = userSelect[userSelect.selectedIndex].value;
+    console.log("round: " + round_id + ", user: " + user_id);
+    console.log(roundSelect);
+    var score = {};
+    var table = document.getElementById('update_scores');
+
+    for(var i = 2; i < table.rows.length; i++)
+    {
+        var table_row = table.rows[i];
+        for(var j=1; j < 19; j++)
+        {
+            score[j-1] = table_row.cells[j].children[0].value;
+        }
+        console.log(score);
+
+    db
+        .collection('player_score')
+        .add({
+            player: '/player/'+user_id,
+            round: '/round/'+round_id,
+            score: score
+        })
+        .then(function(docRef) {
+            console.log('Document written with ID: ', docRef.id);
+        })
+        .catch(function(error) {
+            console.error('Error adding document: ', error);
+        });
+
+    }
+
+
+
+}
+
+</script>

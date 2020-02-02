@@ -6,61 +6,68 @@
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+    <!--<![endif]-->
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>Inputs</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./style.css">
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="./style.css" />
+        <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
     </head>
     <body>
         <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+            <p class="browsehappy">
+                You are using an <strong>outdated</strong> browser. Please
+                <a href="#">upgrade your browser</a> to improve your experience.
+            </p>
         <![endif]-->
 
         <!-- CREATE NEW USER -->
         <form action="#">
-            First name:<br>
-            <input id="firstName" type="text" name="firstname" value=""><br>
-            Last name:<br>
-            <input id="lastName" type="text" name="lastname"><br><br>
-            <input type="button" value="Submit" onclick="testing()">
-          </form> 
+            First name:<br />
+            <input id="firstName" type="text" name="firstname" value="" /><br />
+            Last name:<br />
+            <input id="lastName" type="text" name="lastname" /><br /><br />
+            <input type="button" value="Submit" onclick="testing()" />
+        </form>
 
         <!-- Create Round -->
 
         <!-- Update Scores -->
         <form action="#">
-            Player:<br>
-            <select id="player"> 
+            Player:<br />
+            <select id="player">
                 <option value="wills">Wills</option>
                 <option value="dale">Dale</option>
                 <option value="chris">Chris</option>
                 <option value="nick">Nick</option>
-              </select> <br>
-            Round:<br>
+            </select>
+            <br />
+            Round:<br />
             <select id="round">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
-              </select> <br>
-            Hole:<br>
+            </select>
+            <br />
+            Hole:<br />
             <select id="round">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
-              </select> <br>
-            Score:<br>
-            <input id="score" type="text" name="score" value="">
-            <input type="button" value="Submit" onclick="testing()">
-          </form> 
-          <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
-          <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
-
+            </select>
+            <br />
+            Score:<br />
+            <input id="score" type="text" name="score" value="" />
+            <input type="button" value="Submit" onclick="testing()" />
+        </form>
         <script src="./input.js" async defer></script>
     </body>
 </html>

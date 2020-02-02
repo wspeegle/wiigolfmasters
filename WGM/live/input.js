@@ -1,7 +1,3 @@
-const firebase = require('firebase');
-// Required for side-effects
-require('firebase/firestore');
-
 function testing() {
     let firstName = document.getElementById('firstName').value;
     let lastName = document.getElementById('lastName').value;
@@ -12,7 +8,7 @@ function testing() {
 }
 
 // Initialize Cloud Firestore through Firebase
-const firebaseConfig = {
+const config = {
     apiKey: 'AIzaSyB3qmQNbtcpQeLSn3mHsAoYtDxGL-uHL6c',
     authDomain: 'wiigolfmasters.firebaseapp.com',
     databaseURL: 'https://wiigolfmasters.firebaseio.com',
@@ -23,4 +19,15 @@ const firebaseConfig = {
     measurementId: 'G-8TGBMCXL58'
 };
 
-var db = firebase.firestore();
+firebase.initializeApp(config);
+
+const firestore = firebase.firestore();
+
+firestore
+    .collection('players')
+    .get()
+    .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            console.log(`${doc.id} => ${doc.data()}`);
+        });
+    });

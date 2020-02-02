@@ -20,7 +20,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
 
-        <!-- CREATE NEW PLAYER -->
+        <!-- CREATE NEW USER -->
         <form action="#">
             First name:<br>
             <input id="firstName" type="text" name="firstname" value=""><br>
@@ -28,6 +28,39 @@
             <input id="lastName" type="text" name="lastname"><br><br>
             <input type="button" value="Submit" onclick="testing()">
           </form> 
+
+        <!-- Create Round -->
+
+        <!-- Update Scores -->
+        <form action="#">
+            Player:<br>
+            <select id="player"> 
+                <option value="wills">Wills</option>
+                <option value="dale">Dale</option>
+                <option value="chris">Chris</option>
+                <option value="nick">Nick</option>
+              </select> <br>
+            Round:<br>
+            <select id="round">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select> <br>
+            Hole:<br>
+            <select id="round">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select> <br>
+            Score:<br>
+            <input id="score" type="text" name="score" value="">
+            <input type="button" value="Submit" onclick="testing()">
+          </form> 
+          <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+          <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+
         <script src="./input.js" async defer></script>
     </body>
 </html>

@@ -2,3 +2,4 @@
 *.MOV
 WGM/firebase-tools-instant-win.exe
 WGM/firebase.json
+node_modules

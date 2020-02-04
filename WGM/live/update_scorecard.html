@@ -92,198 +92,216 @@
 </html>
 
 <script>
-    // Initialize Cloud Firestore through Firebase
-    firebase.initializeApp({
-        apiKey: "AIzaSyB3qmQNbtcpQeLSn3mHsAoYtDxGL-uHL6c",
-        authDomain: "wiigolfmasters.firebaseapp.com",
-        databaseURL: "https://wiigolfmasters.firebaseio.com",
-        projectId: "wiigolfmasters",
-        storageBucket: "wiigolfmasters.appspot.com",
-        messagingSenderId: "660957033972",
-        appId: "1:660957033972:web:59179876aae65a91b875a1",
-        measurementId: "G-8TGBMCXL58"
-    });
+// Initialize Cloud Firestore through Firebase
+firebase.initializeApp
+({
+    apiKey: "AIzaSyB3qmQNbtcpQeLSn3mHsAoYtDxGL-uHL6c",
+    authDomain: "wiigolfmasters.firebaseapp.com",
+    databaseURL: "https://wiigolfmasters.firebaseio.com",
+    projectId: "wiigolfmasters",
+    storageBucket: "wiigolfmasters.appspot.com",
+    messagingSenderId: "660957033972",
+    appId: "1:660957033972:web:59179876aae65a91b875a1",
+    measurementId: "G-8TGBMCXL58"
+});
+var db = firebase.firestore();
 
-    //Build round selector
-    var db = firebase.firestore();
-    db.collection("round").orderBy("year", "desc").orderBy("round_num", "desc").get().then(function (querySnapshot) {
-        var roundSelect = document.getElementById('round_select');
-        var opt = document.createElement('option');
-        opt.appendChild(document.createTextNode("-"));
+//Build round selector dropdown
+//Order by year, then by round number for an easier to read dropdown
+db.collection("round").orderBy("year", "desc").orderBy("round_num", "desc").get().then(function(querySnapshot)
+{
+    var roundSelect = document.getElementById('round_select');
+    var opt         = document.createElement('option');
+    opt.appendChild(document.createTextNode("-"));
+    roundSelect.appendChild(opt);
+    querySnapshot.forEach(function(doc)
+    {
+        var doc_data    = doc.data();
+        opt             = document.createElement('option');
+        opt.value       = doc.id;
+        opt.appendChild(document.createTextNode(doc_data.year + ":" + doc_data.round_num));
         roundSelect.appendChild(opt);
-        querySnapshot.forEach(function (doc) {
-            var doc_data = doc.data();
-            opt = document.createElement('option');
-            opt.appendChild(document.createTextNode(doc_data.year + ":" + doc_data.round_num));
-            opt.value = doc.id;
-            roundSelect.appendChild(opt);
-        });
-    }).catch(function (error) {
-        console.log(error.message);
     });
+}).catch(function(error)
+{
+    console.log(error.message);
+});
 
-    //Add a new row to the current scorecard
-    function addRow() {
-        var table = document.getElementById('update_scores');
-
-        var row = table.insertRow();
-        var row_num = table.rows.length;
-        var cell = row.insertCell();
-        cell.innerHTML = "<select id='userSelect_" + row_num + "' onchange='getScorecardRowScores(this)'>";
-        cell.className = 'roundNo';
-        for (var i = 0; i < 18; i++) {
-            cell = row.insertCell();
-            cell.className = 'scoreNos';
-            cell.innerHTML = "<input style='width: 25px; height:25px' type='text' id='" + row_num + '_' + i +"' onchange='updateRowTotal(this)'>";
-        }
+//Add a new row to the current scorecard
+function addRow()
+{
+    var table   = document.getElementById('update_scores');
+    var row     = table.insertRow();
+    var row_num = table.rows.length;
+    //Create user select dropdown in first column
+    //When a user is selected, it will prompt the onchange and fill in their scorecard if they have one for the selected round
+    var cell = row.insertCell();
+    cell.innerHTML = "<select id='userSelect_" + row_num + "' onchange='getScorecardRowScores(this)'>";
+    cell.className = 'roundNo';
+    //Build the rest of the input fields for each hole. id = row_col
+    for (var i = 0; i < 18; i++)
+    {
         cell = row.insertCell();
         cell.className = 'scoreNos';
-
-        getData("players", function (querySnapshot) {
-            var userSelect = document.getElementById('userSelect_' + row_num);
-            var opt = document.createElement('option');
-            opt.appendChild(document.createTextNode("-"));
-            userSelect.appendChild(opt);
-            querySnapshot.forEach(function (doc) {
-                var doc_data = doc.data();
-                opt = document.createElement('option');
-                opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
-                opt.value = doc.id;
-                userSelect.appendChild(opt);
-            });
-        });
-        return row_num;
+        cell.innerHTML = "<input style='width: 25px; height:25px' type='text' id='" + row_num + '_' + i + "' onchange='updateRowTotal(this)'>";
     }
+    cell = row.insertCell();
 
-
-    //Send scorecard info to db for specific round and user
-    function updateScorecard() {
-        var db = firebase.firestore();
-        var roundSelect = document.getElementById('round_select');
-        var round_id = roundSelect[roundSelect.selectedIndex].value;
-        var table = document.getElementById('update_scores');
-
-        var score = {};
-        for (let i = 2; i < table.rows.length; i++) {
-
-            var userSelect = document.getElementById('userSelect_' + (i + 1));
-            var user_id = userSelect[userSelect.selectedIndex].value;
-            var player_scores = db.collection("player_score");
-            var players_round_scorecard = player_scores.where("player", '==', '/player/' + user_id).where("round", '==', '/round/' + round_id);
-            players_round_scorecard.get().then(function (querySnapshot) {
-                let player_score_doc_id = null;
-                querySnapshot.forEach(function (doc) {
-                    player_score_doc_id = doc.id;
-                });
-                let table_row = table.rows[i];
-                for (var j = 1; j < 19; j++)
-                {
-                    score[j - 1] = table_row.cells[j].children[0].value;
-                }
-                
-
-                if (player_score_doc_id) {
-                    //player score for this round already exists, we need to update it'
-                    var player_score_doc = db.collection('player_score').doc(player_score_doc_id);
-                    return player_score_doc.update({
-                        score: score
-                    });
-
-                } else {
-                    //no doc exists, create a new one
-                    db.collection('player_score').add({
-                        player: '/player/' + user_id,
-                        round: '/round/' + round_id,
-                        score: score
-                    })
-                        .then(function (docRef) {
-                            console.log('Document written with ID: ', docRef.id);
-                        })
-                        .catch(function (error) {
-                            console.error('Error adding document: ', error);
-                        });
-
-                }
-
-            });
-
-        }
-    }
-
-
-    function getScorecardRowScores(select) {
-        var select_id = select.id;
-        var row_num = select_id.substring(select_id.indexOf('_') + 1);
-        var user_id = select.value;
-        var roundSelect = document.getElementById('round_select');
-        var round_id = roundSelect[roundSelect.selectedIndex].value;
-        var table = document.getElementById('update_scores');
-
-        //Check to see if a scorecard exists for the player and round selected
-        //If so, we want to populate the scorecard with those values so maybe we edit them later
-        //probably need to store this player_score document id somewhere
-        var db = firebase.firestore();
-        var player_scores = db.collection("player_score");
-        var players_round_scorecard = player_scores.where("player", '==', '/player/' + user_id).where("round", '==', '/round/' + round_id);
-        players_round_scorecard.get().then(function (querySnapshot) {
-            //clear out the row's existing values
-            var row = table.rows[row_num - 1];
-            for (var i = 1; i < 19; i++) {
-                row.cells[i].children[0].value = '';
-            }
-            row.cells[19].innerHTML = '';
-            querySnapshot.forEach(function (doc) {
-                var score = doc.data().score;
-                //Iterate through the table's row and add the score to each column in the scorecard
-                var row_total = 0;
-                for (var i = 1; i < 19; i++) {
-                    row.cells[i].children[0].value = score[i - 1];
-                    row_total += isNaN(parseInt(row.cells[i].children[0].value)) ? 0 : parseInt(row.cells[i].children[0].value);
-                }
-                row.cells[19].innerHTML = row_total;
-            })
-        });
-    }
-
-    function updateRowTotal(input) {
-        var row_num = input.id.split('_')[0];
-        var table = document.getElementById('update_scores');
-        var row = table.rows[row_num - 1];
-        var row_total = 0;
-        for (var i = 1; i < 19; i++) {
-            row_total += isNaN(parseInt(row.cells[i].children[0].value)) ? 0 : parseInt(row.cells[i].children[0].value);
-        }
-        row.cells[19].innerHTML = row_total;
-    }
-
-    function getScorecardForRound() {
-        var roundSelect = document.getElementById('round_select');
-        var round_id = roundSelect[roundSelect.selectedIndex].value;
-        //clear any table rows
-        var table = document.getElementById('update_scores');
-        for(var i = 2; i < table.rows.length;)
+    //Fills in the user select we just made
+    //this should probably remove options that we have already selected
+    //maybe this should be moved into its own function
+    getData("players", function(querySnapshot)
+    {
+        var userSelect = document.getElementById('userSelect_' + row_num);
+        var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode("-"));
+        userSelect.appendChild(opt);
+        querySnapshot.forEach(function(doc)
         {
-            table.deleteRow(i);
-        }
-
-        var db = firebase.firestore();
-        var player_scores = db.collection("player_score");
-        var players_round_scorecard = player_scores.where("round", '==', '/round/' + round_id);
-        players_round_scorecard.get().then(function (querySnapshot) {
-            
-            //add a row for each score we have saved for the selected round 
-            querySnapshot.forEach(function (doc) {
-                var row_num = addRow();
-                setTimeout(function () {
-                    var userSelect = document.getElementById('userSelect_' + row_num);
-                    userSelect.value = doc.data().player.split('/')[2];
-                    getScorecardRowScores(userSelect);
-                }, 200);
-
-            });
+            var doc_data = doc.data();
+            opt = document.createElement('option');
+            opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
+            opt.value = doc.id;
+            userSelect.appendChild(opt);
         });
-    
+    });
+    return row_num;
+}
 
+
+//Send scorecard info to db for specific round and user
+//This checks to see if a scorecard has already been made for the player and round
+//if a scorecard has already been made, it will update that one instead of creating a new one
+function updateScorecard()
+{
+    var db          = firebase.firestore();
+    var roundSelect = document.getElementById('round_select');
+    var round_id    = roundSelect[roundSelect.selectedIndex].value;
+    var table       = document.getElementById('update_scores');
+    var score       = {};
+
+    for (let i = 2; i < table.rows.length; i++)
+    {
+        var userSelect              = document.getElementById('userSelect_' + (i + 1));
+        var user_id                 = userSelect[userSelect.selectedIndex].value;
+        var player_scores           = db.collection("player_score");
+        var players_round_scorecard = player_scores.where("player", '==', '/player/' + user_id).where("round", '==', '/round/' + round_id);
+
+        players_round_scorecard.get().then(function(querySnapshot)
+        {
+            //If we get a doc id back we will need to store it
+            let player_score_doc_id = null;
+            querySnapshot.forEach(function(doc)
+            {
+                player_score_doc_id = doc.id;
+            });
+            //populate the score array with the values of the row
+            let table_row = table.rows[i];
+            for (var j = 1; j < 19; j++)
+            {
+                score[j - 1] = table_row.cells[j].children[0].value;
+            }
+
+            if (player_score_doc_id)
+            {
+                //player score for this round already exists, we need to update it'
+                var player_score_doc = db.collection('player_score').doc(player_score_doc_id);
+                return player_score_doc.update({
+                    score: score
+                });
+            }else
+            {
+                //no doc exists, create a new one
+                db.collection('player_score').add
+                ({
+                    player: '/player/' + user_id,
+                    round: '/round/' + round_id,
+                    score: score
+                });
+            }
+        });
     }
+}
+
+//Check to see if a scorecard exists for the player and round selected
+//If so, we want to populate the scorecard with those values so maybe we edit them later
+function getScorecardRowScores(select)
+{
+    var select_id               = select.id;
+    var row_num                 = select_id.substring(select_id.indexOf('_') + 1);
+    var user_id                 = select.value;
+    var roundSelect             = document.getElementById('round_select');
+    var round_id                = roundSelect[roundSelect.selectedIndex].value;
+    var table                   = document.getElementById('update_scores');
+    var db                      = firebase.firestore();
+    var player_scores           = db.collection("player_score");
+    var players_round_scorecard = player_scores.where("player", '==', '/player/' + user_id).where("round", '==', '/round/' + round_id);
+    players_round_scorecard.get().then(function(querySnapshot)
+    {
+        //clear out the row's existing values
+        var row = table.rows[row_num - 1];
+        for (var i = 1; i < 19; i++)
+        {
+            row.cells[i].children[0].value = '';
+        }
+        row.cells[19].innerHTML = '';
+        querySnapshot.forEach(function(doc)
+        {
+            var score = doc.data().score;
+            //Iterate through the table's row and add the score to each column in the scorecard
+            var row_total = 0;
+            for (var i = 1; i < 19; i++)
+            {
+                row.cells[i].children[0].value = score[i - 1];
+                row_total += isNaN(parseInt(row.cells[i].children[0].value)) ? 0 : parseInt(row.cells[i].children[0].value);
+            }
+            row.cells[19].innerHTML = row_total;
+        })
+    });
+}
+
+function updateRowTotal(input)
+{
+    var row_num     = input.id.split('_')[0];
+    var table       = document.getElementById('update_scores');
+    var row         = table.rows[row_num - 1];
+    var row_total   = 0;
+    for (var i = 1; i < 19; i++)
+    {
+        row_total += isNaN(parseInt(row.cells[i].children[0].value)) ? 0 : parseInt(row.cells[i].children[0].value);
+    }
+    row.cells[19].innerHTML = row_total;
+}
+
+function getScorecardForRound()
+{
+    var roundSelect             = document.getElementById('round_select');
+    var round_id                = roundSelect[roundSelect.selectedIndex].value;
+    var table                   = document.getElementById('update_scores');
+    var db                      = firebase.firestore();
+    var player_scores           = db.collection("player_score");
+    var players_round_scorecard = player_scores.where("round", '==', '/round/' + round_id);
+    //clear any table rows that have been added
+    for(var i = 2; i < table.rows.length;)
+    {
+        table.deleteRow(i);
+    }
+
+    //repopulate the table with any scorecards we have already saved for the selected round
+    players_round_scorecard.get().then(function(querySnapshot)
+    {
+        querySnapshot.forEach(function(doc)
+        {
+            var row_num = addRow();
+            setTimeout(function() //This is very hacky - there has to be a better way to do this. 
+            {
+                var userSelect = document.getElementById('userSelect_' + row_num);
+                userSelect.value = doc.data().player.split('/')[2];
+                getScorecardRowScores(userSelect);
+            }, 200);
+
+        });
+    });
+}
 
 </script>

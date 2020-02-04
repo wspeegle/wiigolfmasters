@@ -114,7 +114,6 @@
         querySnapshot.forEach(function (doc) {
             var doc_data = doc.data();
             opt = document.createElement('option');
-            console.log(doc);
             opt.appendChild(document.createTextNode(doc_data.year + ":" + doc_data.round_num));
             opt.value = doc.id;
             roundSelect.appendChild(opt);
@@ -135,7 +134,7 @@
         for (var i = 0; i < 18; i++) {
             cell = row.insertCell();
             cell.className = 'scoreNos';
-            cell.innerHTML = "<input style='width: 25px; height:25px' type='text' id='" + row_num + "' onchange='updateRowTotal(this)'>";
+            cell.innerHTML = "<input style='width: 25px; height:25px' type='text' id='" + row_num + '_' + i +"' onchange='updateRowTotal(this)'>";
         }
         cell = row.insertCell();
         cell.className = 'scoreNos';
@@ -148,7 +147,6 @@
             querySnapshot.forEach(function (doc) {
                 var doc_data = doc.data();
                 opt = document.createElement('option');
-                console.log(doc);
                 opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
                 opt.value = doc.id;
                 userSelect.appendChild(opt);
@@ -171,7 +169,6 @@
             var userSelect = document.getElementById('userSelect_' + (i + 1));
             var user_id = userSelect[userSelect.selectedIndex].value;
             var player_scores = db.collection("player_score");
-            console.log("user_id: " + user_id + ", round id: " + round_id);
             var players_round_scorecard = player_scores.where("player", '==', '/player/' + user_id).where("round", '==', '/round/' + round_id);
             players_round_scorecard.get().then(function (querySnapshot) {
                 let player_score_doc_id = null;
@@ -249,7 +246,8 @@
     }
 
     function updateRowTotal(input) {
-        var row_num = input.id;
+        var row_num = input.id.split('_')[0];
+        var table = document.getElementById('update_scores');
         var row = table.rows[row_num - 1];
         var row_total = 0;
         for (var i = 1; i < 19; i++) {
@@ -263,7 +261,7 @@
         var round_id = roundSelect[roundSelect.selectedIndex].value;
         //clear any table rows
         var table = document.getElementById('update_scores');
-        for(var i = 2; i < table.rows.length; i++)
+        for(var i = 2; i < table.rows.length;)
         {
             table.deleteRow(i);
         }

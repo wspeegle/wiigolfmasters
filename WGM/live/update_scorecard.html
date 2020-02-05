@@ -84,8 +84,8 @@
                 </tr>
             </table>
             <br>
-            <input type="button" value='Add Player' onclick='addRow()' style='float:left;'>
-            <input type="button" value='Update' onclick='updateScorecard()' style='float:right;'>
+            <input type="button" value='Add Player' onclick='addRow()' style='float:left;' class="update_scorecard_button">
+            <input type="button" value='Update' onclick='updateScorecard()' style='float:right;' class="update_scorecard_button">
         </form>
 </body>
 
@@ -128,7 +128,7 @@ db.collection("round").orderBy("year", "desc").orderBy("round_num", "desc").get(
 });
 
 //Add a new row to the current scorecard
-function addRow()
+function addRow(user_value)
 {
     var table   = document.getElementById('update_scores');
     var row     = table.insertRow();
@@ -145,12 +145,16 @@ function addRow()
         cell.className = 'scoreNos';
         cell.innerHTML = "<input style='width: 25px; height:25px' type='text' id='" + row_num + '_' + i + "' onchange='updateRowTotal(this)'>";
     }
+    //Total cell
     cell = row.insertCell();
+
+
 
     //Fills in the user select we just made
     //this should probably remove options that we have already selected
     //maybe this should be moved into its own function
-    getData("players", function(querySnapshot)
+    var db = firebase.firestore();
+    db.collection("players").get().then(function(querySnapshot)
     {
         var userSelect = document.getElementById('userSelect_' + row_num);
         var opt = document.createElement('option');
@@ -164,7 +168,18 @@ function addRow()
             opt.value = doc.id;
             userSelect.appendChild(opt);
         });
+    
+    if(user_value)
+    {
+        var userSelect = document.getElementById('userSelect_' + row_num);
+        userSelect.value = user_value;
+        getScorecardRowScores(userSelect);
+    }
     });
+
+
+
+    
     return row_num;
 }
 
@@ -174,53 +189,51 @@ function addRow()
 //if a scorecard has already been made, it will update that one instead of creating a new one
 function updateScorecard()
 {
-    var db          = firebase.firestore();
-    var roundSelect = document.getElementById('round_select');
-    var round_id    = roundSelect[roundSelect.selectedIndex].value;
-    var table       = document.getElementById('update_scores');
-    var score       = {};
+    var db              = firebase.firestore();
+    var roundSelect     = document.getElementById('round_select');
+    var round_id        = roundSelect[roundSelect.selectedIndex].value;
+    var table           = document.getElementById('update_scores');
+    var score           = {};
+    var update_status   = {};
+    var batch           = db.batch();
 
     for (let i = 2; i < table.rows.length; i++)
     {
         var userSelect              = document.getElementById('userSelect_' + (i + 1));
         var user_id                 = userSelect[userSelect.selectedIndex].value;
         var player_scores           = db.collection("player_score");
-        var players_round_scorecard = player_scores.where("player", '==', '/player/' + user_id).where("round", '==', '/round/' + round_id);
-
-        players_round_scorecard.get().then(function(querySnapshot)
+        
+        //If we get a doc id back we will need to store it
+        let player_score_doc_id = round_id + "_" + user_id;
+        
+        //populate the score array with the values of the row
+        let table_row = table.rows[i];
+        for (var j = 1; j < 19; j++)
         {
-            //If we get a doc id back we will need to store it
-            let player_score_doc_id = null;
-            querySnapshot.forEach(function(doc)
-            {
-                player_score_doc_id = doc.id;
-            });
-            //populate the score array with the values of the row
-            let table_row = table.rows[i];
-            for (var j = 1; j < 19; j++)
-            {
-                score[j - 1] = table_row.cells[j].children[0].value;
-            }
+            score[j - 1] = table_row.cells[j].children[0].value;
+        }
 
-            if (player_score_doc_id)
+        
+            //player score for this round already exists, we need to update it'
+           
+            //no doc exists, create a new one
+            var player_score_doc = db.collection('player_score').doc(player_score_doc_id);
+            batch.set(player_score_doc, 
             {
-                //player score for this round already exists, we need to update it'
-                var player_score_doc = db.collection('player_score').doc(player_score_doc_id);
-                return player_score_doc.update({
-                    score: score
-                });
-            }else
-            {
-                //no doc exists, create a new one
-                db.collection('player_score').add
-                ({
-                    player: '/player/' + user_id,
-                    round: '/round/' + round_id,
-                    score: score
-                });
-            }
-        });
+                player: '/player/' + user_id,
+                round: '/round/' + round_id,
+                score: score
+            }, {merge:true});
     }
+
+    return batch.commit().then(function()
+    {
+        createModalPopup('Rows successfully updated.');
+    }).catch(function(error)
+    {
+        createModalPopup('And error occured, no rows updated');
+    });
+    
 }
 
 //Check to see if a scorecard exists for the player and round selected
@@ -292,16 +305,36 @@ function getScorecardForRound()
     {
         querySnapshot.forEach(function(doc)
         {
-            var row_num = addRow();
-            setTimeout(function() //This is very hacky - there has to be a better way to do this. 
-            {
-                var userSelect = document.getElementById('userSelect_' + row_num);
-                userSelect.value = doc.data().player.split('/')[2];
-                getScorecardRowScores(userSelect);
-            }, 200);
-
+            var user_value = doc.data().player.split('/')[2];
+            var row_num = addRow(user_value);
         });
     });
+}
+
+function createModalPopup(modal_text)
+{
+    var modal = document.createElement('div');
+    modal.id = 'popup_modal';
+    modal.className ='modal';
+    var modal_content = document.createElement('div');
+    modal_content.className = 'modal-content';
+    var modal_msg = document.createElement('p');
+    modal_msg.innerHTML = modal_text;
+    modal_content.appendChild(modal_msg);
+    modal.appendChild(modal_content);
+    document.children[0].appendChild(modal); 
+}
+
+window.onclick = function(event)
+{
+    var modal = document.getElementById('popup_modal');
+    if(modal)
+    {
+        if (event.target == modal)
+        {
+            document.children[0].removeChild(modal)
+        }
+    }
 }
 
 </script>

@@ -1,134 +1,340 @@
 <!DOCTYPE html>
-<html>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/style.css" />
-<title>2019 Wii Golf Masters</title>
+<script type="text/javascript" src="db_utils.js"></script>
+<script type="text/javascript" src="scorecard.js"></script>
+<html>
+<title>2020 Wii Golf Masters</title>
 
 <body>
-        <div w3-include-html="/topleaderboard.html"></div>
-        <div w3-include-html="/nav.html"></div>
-
-        <div class="player_container">
-
-
-                <br>
-                <br>
-
-
-
-
-
-             
-                    <form>
-                
-                        <table class="player_card">
-                            <colgroup>
-                                    <col style="width: 80px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 41px">
-                                    <col style="width: 80px">
-                            </colgroup>
-                            <tr>
-                                    <th class="holeNos">Hole</th>
-                                    <th class="holeNos">1</th>
-                                    <th class="holeNos">2</th>
-                                    <th class="holeNos">3</th>
-                                    <th class="holeNos">4</th>
-                                    <th class="holeNos">5</th>
-                                    <th class="holeNos">6</th>
-                                    <th class="holeNos">7</th>
-                                    <th class="holeNos">8</th>
-                                    <th class="holeNos">9</th>
-                                    <th class="holeNos">10</th>
-                                    <th class="holeNos">11</th>
-                                    <th class="holeNos">12</th>
-                                    <th class="holeNos">13</th>
-                                    <th class="holeNos">14</th>
-                                    <th class="holeNos">15</th>
-                                    <th class="holeNos">16</th>
-                                    <th class="holeNos">17</th>
-                                    <th class="holeNos">18</th>
-                                    <th class="holeNos">Total</th>
-                            </tr>
-                            <tr>
-                                    <td class="parNos">Par</td>
-                                    <td class="parNos">4</td>
-                                    <td class="parNos">3</td>
-                                    <td class="parNos">5</td>
-                                    <td class="parNos">3</td>
-                                    <td class="parNos">5</td>
-                                    <td class="parNos">4</td>
-                                    <td class="parNos">4</td>
-                                    <td class="parNos">3</td>
-                                    <td class="parNos">5</td>
-                                    <td class="parNos">4</td>
-                                    <td class="parNos">3</td>
-                                    <td class="parNos">5</td>
-                                    <td class="parNos">3</td>
-                                    <td class="parNos">5</td>
-                                    <td class="parNos">4</td>
-                                    <td class="parNos">4</td>
-                                    <td class="parNos">3</td>
-                                    <td class="parNos">5</td>
-                                    <td class="parNos">72</td>
-                            </tr>
-                            <tr>
-                                    <td class="roundNo">R1</td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="scoreNos"><input style="width: 41px" type='number'></td>
-                                    <td class="roundNo"></td>
-                            </tr>
-
-                    </table>
-                        </form>
-                        <br>
-                        <br>
-                        
-
-
-
-                
-                        
-                        <br>
-                        <br>
-                        
-               
-                <br>
-                <br>
-
+    <div class="player_container">
+        <form>
+            Round: <select id='round_select' onchange='getScorecardForRound()'></select>
+            <br><br>
+            <table id='update_scores' class="player_card">
+                <colgroup>
+                    <col style="width: 80px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 41px">
+                    <col style="width: 80px">
+                </colgroup>
+                <tr>
+                    <th class="holeNos">Hole</th>
+                    <th class="holeNos">1</th>
+                    <th class="holeNos">2</th>
+                    <th class="holeNos">3</th>
+                    <th class="holeNos">4</th>
+                    <th class="holeNos">5</th>
+                    <th class="holeNos">6</th>
+                    <th class="holeNos">7</th>
+                    <th class="holeNos">8</th>
+                    <th class="holeNos">9</th>
+                    <th class="holeNos">10</th>
+                    <th class="holeNos">11</th>
+                    <th class="holeNos">12</th>
+                    <th class="holeNos">13</th>
+                    <th class="holeNos">14</th>
+                    <th class="holeNos">15</th>
+                    <th class="holeNos">16</th>
+                    <th class="holeNos">17</th>
+                    <th class="holeNos">18</th>
+                    <th class="holeNos">Total</th>
+                </tr>
+                <tr>
+                    <td class="parNos">Par</td>
+                    <td class="parNos">4</td>
+                    <td class="parNos">3</td>
+                    <td class="parNos">5</td>
+                    <td class="parNos">3</td>
+                    <td class="parNos">5</td>
+                    <td class="parNos">4</td>
+                    <td class="parNos">4</td>
+                    <td class="parNos">3</td>
+                    <td class="parNos">5</td>
+                    <td class="parNos">4</td>
+                    <td class="parNos">3</td>
+                    <td class="parNos">5</td>
+                    <td class="parNos">3</td>
+                    <td class="parNos">5</td>
+                    <td class="parNos">4</td>
+                    <td class="parNos">4</td>
+                    <td class="parNos">3</td>
+                    <td class="parNos">5</td>
+                    <td class="parNos">72</td>
+                </tr>
+            </table>
+            <br>
+            <input type="button" value='Add Player' onclick='addRow()' style='float:left;' class="update_scorecard_button">
+            <input type="button" value='Update' onclick='updateScorecard()' style='float:right;' class="update_scorecard_button">
+        </form>
 </body>
 
-
-
 </html>
+
+<script>
+// Initialize Cloud Firestore through Firebase
+firebase.initializeApp
+({
+    apiKey: "AIzaSyB3qmQNbtcpQeLSn3mHsAoYtDxGL-uHL6c",
+    authDomain: "wiigolfmasters.firebaseapp.com",
+    databaseURL: "https://wiigolfmasters.firebaseio.com",
+    projectId: "wiigolfmasters",
+    storageBucket: "wiigolfmasters.appspot.com",
+    messagingSenderId: "660957033972",
+    appId: "1:660957033972:web:59179876aae65a91b875a1",
+    measurementId: "G-8TGBMCXL58"
+});
+var db = firebase.firestore();
+
+//Build round selector dropdown
+//Order by year, then by round number for an easier to read dropdown
+db.collection("round").orderBy("year", "desc").orderBy("round_num", "desc").get().then(function(querySnapshot)
+{
+    var roundSelect = document.getElementById('round_select');
+    var opt         = document.createElement('option');
+    opt.appendChild(document.createTextNode("-"));
+    roundSelect.appendChild(opt);
+    querySnapshot.forEach(function(doc)
+    {
+        var doc_data    = doc.data();
+        opt             = document.createElement('option');
+        opt.value       = doc.id;
+        opt.appendChild(document.createTextNode(doc_data.year + ":" + doc_data.round_num));
+        roundSelect.appendChild(opt);
+    });
+}).catch(function(error)
+{
+    console.log(error.message);
+});
+
+//Add a new row to the current scorecard
+function addRow(user_value)
+{
+    var table   = document.getElementById('update_scores');
+    var row     = table.insertRow();
+    var row_num = table.rows.length;
+    //Create user select dropdown in first column
+    //When a user is selected, it will prompt the onchange and fill in their scorecard if they have one for the selected round
+    var cell = row.insertCell();
+    cell.innerHTML = "<select id='userSelect_" + row_num + "' onchange='getScorecardRowScores(this)'>";
+    cell.className = 'roundNo';
+    //Build the rest of the input fields for each hole. id = row_col
+    for (var i = 0; i < 18; i++)
+    {
+        cell = row.insertCell();
+        cell.className = 'scoreNos';
+        cell.innerHTML = "<input style='width: 25px; height:25px' type='text' id='" + row_num + '_' + i + "' onchange='updateRowTotal(this)'>";
+    }
+    //Total cell
+    cell = row.insertCell();
+
+
+
+    //Fills in the user select we just made
+    //this should probably remove options that we have already selected
+    //maybe this should be moved into its own function
+    var db = firebase.firestore();
+    db.collection("players").get().then(function(querySnapshot)
+    {
+        var userSelect = document.getElementById('userSelect_' + row_num);
+        var opt = document.createElement('option');
+        opt.appendChild(document.createTextNode("-"));
+        userSelect.appendChild(opt);
+        querySnapshot.forEach(function(doc)
+        {
+            var doc_data = doc.data();
+            opt = document.createElement('option');
+            opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
+            opt.value = doc.id;
+            userSelect.appendChild(opt);
+        });
+    
+    if(user_value)
+    {
+        var userSelect = document.getElementById('userSelect_' + row_num);
+        userSelect.value = user_value;
+        getScorecardRowScores(userSelect);
+    }
+    });
+
+
+
+    
+    return row_num;
+}
+
+
+//Send scorecard info to db for specific round and user
+//This checks to see if a scorecard has already been made for the player and round
+//if a scorecard has already been made, it will update that one instead of creating a new one
+function updateScorecard()
+{
+    var db              = firebase.firestore();
+    var roundSelect     = document.getElementById('round_select');
+    var round_id        = roundSelect[roundSelect.selectedIndex].value;
+    var table           = document.getElementById('update_scores');
+    var score           = {};
+    var update_status   = {};
+    var batch           = db.batch();
+
+    for (let i = 2; i < table.rows.length; i++)
+    {
+        var userSelect              = document.getElementById('userSelect_' + (i + 1));
+        var user_id                 = userSelect[userSelect.selectedIndex].value;
+        var player_scores           = db.collection("player_score");
+        
+        //If we get a doc id back we will need to store it
+        let player_score_doc_id = round_id + "_" + user_id;
+        
+        //populate the score array with the values of the row
+        let table_row = table.rows[i];
+        for (var j = 1; j < 19; j++)
+        {
+            score[j - 1] = table_row.cells[j].children[0].value;
+        }
+
+        
+            //player score for this round already exists, we need to update it'
+           
+            //no doc exists, create a new one
+            var player_score_doc = db.collection('player_score').doc(player_score_doc_id);
+            batch.set(player_score_doc, 
+            {
+                player: '/player/' + user_id,
+                round: '/round/' + round_id,
+                score: score
+            }, {merge:true});
+    }
+
+    return batch.commit().then(function()
+    {
+        createModalPopup('Rows successfully updated.');
+    }).catch(function(error)
+    {
+        createModalPopup('And error occured, no rows updated');
+    });
+    
+}
+
+//Check to see if a scorecard exists for the player and round selected
+//If so, we want to populate the scorecard with those values so maybe we edit them later
+function getScorecardRowScores(select)
+{
+    var select_id               = select.id;
+    var row_num                 = select_id.substring(select_id.indexOf('_') + 1);
+    var user_id                 = select.value;
+    var roundSelect             = document.getElementById('round_select');
+    var round_id                = roundSelect[roundSelect.selectedIndex].value;
+    var table                   = document.getElementById('update_scores');
+    var db                      = firebase.firestore();
+    var player_scores           = db.collection("player_score");
+    var players_round_scorecard = player_scores.where("player", '==', '/player/' + user_id).where("round", '==', '/round/' + round_id);
+    players_round_scorecard.get().then(function(querySnapshot)
+    {
+        //clear out the row's existing values
+        var row = table.rows[row_num - 1];
+        for (var i = 1; i < 19; i++)
+        {
+            row.cells[i].children[0].value = '';
+        }
+        row.cells[19].innerHTML = '';
+        querySnapshot.forEach(function(doc)
+        {
+            var score = doc.data().score;
+            //Iterate through the table's row and add the score to each column in the scorecard
+            var row_total = 0;
+            for (var i = 1; i < 19; i++)
+            {
+                row.cells[i].children[0].value = score[i - 1];
+                row_total += isNaN(parseInt(row.cells[i].children[0].value)) ? 0 : parseInt(row.cells[i].children[0].value);
+            }
+            row.cells[19].innerHTML = row_total;
+        })
+    });
+}
+
+function updateRowTotal(input)
+{
+    var row_num     = input.id.split('_')[0];
+    var table       = document.getElementById('update_scores');
+    var row         = table.rows[row_num - 1];
+    var row_total   = 0;
+    for (var i = 1; i < 19; i++)
+    {
+        row_total += isNaN(parseInt(row.cells[i].children[0].value)) ? 0 : parseInt(row.cells[i].children[0].value);
+    }
+    row.cells[19].innerHTML = row_total;
+}
+
+function getScorecardForRound()
+{
+    var roundSelect             = document.getElementById('round_select');
+    var round_id                = roundSelect[roundSelect.selectedIndex].value;
+    var table                   = document.getElementById('update_scores');
+    var db                      = firebase.firestore();
+    var player_scores           = db.collection("player_score");
+    var players_round_scorecard = player_scores.where("round", '==', '/round/' + round_id);
+    //clear any table rows that have been added
+    for(var i = 2; i < table.rows.length;)
+    {
+        table.deleteRow(i);
+    }
+
+    //repopulate the table with any scorecards we have already saved for the selected round
+    players_round_scorecard.get().then(function(querySnapshot)
+    {
+        querySnapshot.forEach(function(doc)
+        {
+            var user_value = doc.data().player.split('/')[2];
+            var row_num = addRow(user_value);
+        });
+    });
+}
+
+function createModalPopup(modal_text)
+{
+    var modal = document.createElement('div');
+    modal.id = 'popup_modal';
+    modal.className ='modal';
+    var modal_content = document.createElement('div');
+    modal_content.className = 'modal-content';
+    var modal_msg = document.createElement('p');
+    modal_msg.innerHTML = modal_text;
+    modal_content.appendChild(modal_msg);
+    modal.appendChild(modal_content);
+    document.children[0].appendChild(modal); 
+}
+
+window.onclick = function(event)
+{
+    var modal = document.getElementById('popup_modal');
+    if(modal)
+    {
+        if (event.target == modal)
+        {
+            document.children[0].removeChild(modal)
+        }
+    }
+}
+
+</script>

@@ -3,6 +3,7 @@
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/style.css" />
 <script type="text/javascript" src="db_utils.js"></script>
@@ -91,8 +92,16 @@
             </table>
             <br>
             <input type="button" value='Add Player' onclick='addRow()' style='float:left;' class="update_scorecard_button">
-            <input type="button" value='Update' onclick='updateScorecard()' style='float:right;' class="update_scorecard_button">
+            <input type="button" value='Update Scorecard' onclick='updateScorecard()' style='float:right;' class="update_scorecard_button">
         </form>
+        <br><br><br>
+
+
+        <select id="editUserSelect" onchange='fillInUserFields()'>
+        First name: <input type="text" id = 'user_first_name'> Last Name: <input type="text" id = 'user_last_name'>
+        <input type="file" accept="image/*" id="userImageInput">
+        <input type="button" value='Update User' onclick='updateUser()' style='float:right;' class="update_scorecard_button">
+
 </body>
 
 </html>
@@ -132,6 +141,25 @@ db.collection("round").orderBy("year", "desc").orderBy("round_num", "desc").get(
 {
     console.log(error.message);
 });
+
+//Fill in user dropdown for editing users
+db.collection("players").get().then(function(querySnapshot)
+{
+    var userSelect = document.getElementById('editUserSelect');
+    var opt = document.createElement('option');
+    opt.appendChild(document.createTextNode("-"));
+    userSelect.appendChild(opt);
+    querySnapshot.forEach(function(doc)
+    {
+        var doc_data = doc.data();
+        opt = document.createElement('option');
+        opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
+        opt.value = doc.id;
+        userSelect.appendChild(opt);
+    });
+});
+
+
 
 //Add a new row to the current scorecard
 function addRow(user_value)
@@ -348,8 +376,52 @@ window.onclick = function(event)
     }
 }
 
+function fillInUserFields()
+{
+    let userSelect = document.getElementById('editUserSelect');
+    let user_id    = userSelect[userSelect.selectedIndex].value;
+    let first_name_input = document.getElementById('user_first_name');
+    let last_name_input  = document.getElementById('user_last_name');
+    let db = firebase.firestore();
+    db.collection('players').doc(user_id).get().then(function(doc)
+    {
+        first_name_input.value = doc.data().first_name;
+        last_name_input.value = doc.data().last_name;
+    })
+    
+    
+
+}
+var userImage;
+let fileUpload = document.getElementById("userImageInput");
+fileUpload.addEventListener('change', function(evt) {
+      userImage = evt.target.files[0]; // upload the first file only
+  });
+
+function updateUser()
+{
+    let userSelect = document.getElementById('editUserSelect');
+    let user_id    = userSelect[userSelect.selectedIndex].value;
+    let first_name_input = document.getElementById('user_first_name');
+    let last_name_input  = document.getElementById('user_last_name');
+
+    let storageRef = firebase.storage().ref('images/players/'+user_id);
+    let uploadTask = storageRef.put(userImage);
+    let first_name = first_name_input.value;
+    let last_name  = last_name_input.value;
+    db.collection('players').doc(user_id).set(
+    {
+        first_name: first_name,
+        last_name: last_name,
+        player_image: 'images/players/'+user_id
+    }, {merge:true});
+
+
+}
 createScorecardBanner("leaderboard");
 
+
+  
 
 
 </script>

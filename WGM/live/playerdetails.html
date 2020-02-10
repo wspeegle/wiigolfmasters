@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/style.css" />
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="player_page.js"></script>
+<html>
+    <title>Wii Golf Masters</title>
+    <body>
+        <div class="player_container">
+            <div class="player_header">
+                    <div class='playerPic'>
+                            <img id = 'player_img'  class='playerImage_big' width="60px" height="60px">
+                    </div>
+                    <div class="player_header_bottom">
+                            <div id='player_name' class="player_name">DATA</div>
+                            <div class="player_position">
+                                    <div class="player_title_sub_text">
+                                            Position
+                                    </div>
+                                    <div id='player_position' class="player_title_text">
+                                            DATA
+                                    </div>
+                            </div>
+                            <div class="player_today">
+                                    <div class="player_title_sub_text">
+                                            Today
+                                    </div>
+                                    <div id='player_today' class="player_title_text">
+                                            DATA
+                                    </div>
+                            </div>
+                            <div class="player_thru">
+                                    <div class="player_title_sub_text">
+                                            Thru
+                                    </div>
+                                    <div id = 'player_thru' class="player_title_text">
+                                            DATA
+                                    </div>
+                            </div>
+                            <div class="player_total">
+                                    <div class="player_title_sub_text">
+                                            Total
+                                    </div>
+                                    <div id = 'player_total' class="player_title_text">
+                                            DATA
+                                    </div>
+                            </div>
+                    </div>
+            </div>
+
+            <div id='year_tabs' class="tab"></div>
+
+        <div id='scorecards'>
+
+        </div>
+        
+                    
+
+    </body>
+</html>
+
+<script>
+initializeFirebase();
+var player_id = getQueryVariable("player_id");
+console.log(player_id);
+//Build this page based on the player_id given
+buildPlayerPage(player_id);
+
+
+        
+
+
+</script>

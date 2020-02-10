@@ -6,7 +6,7 @@
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/style.css" />
-<script type="text/javascript" src="db_utils.js"></script>
+<script type="text/javascript" src="utils.js"></script>
 <script type="text/javascript" src="scorecard.js"></script>
 <script type="text/javascript" src="scorecard_banner.js"></script>
 <html>
@@ -108,17 +108,8 @@
 
 <script>
 // Initialize Cloud Firestore through Firebase
-firebase.initializeApp
-({
-    apiKey: "AIzaSyB3qmQNbtcpQeLSn3mHsAoYtDxGL-uHL6c",
-    authDomain: "wiigolfmasters.firebaseapp.com",
-    databaseURL: "https://wiigolfmasters.firebaseio.com",
-    projectId: "wiigolfmasters",
-    storageBucket: "wiigolfmasters.appspot.com",
-    messagingSenderId: "660957033972",
-    appId: "1:660957033972:web:59179876aae65a91b875a1",
-    measurementId: "G-8TGBMCXL58"
-});
+initializeFirebase();
+
 var db = firebase.firestore();
 
 //Build round selector dropdown

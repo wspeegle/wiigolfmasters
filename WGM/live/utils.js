@@ -13,23 +13,87 @@ var initializeFirebase = function()
     });
 }
 
-var getPlayerAndRoundData = function(callback)
+var getPlayerAndRoundData = function(years, callback)
 {
     db = firebase.firestore();
-    //first get all the rounds for the latest year
-    db.collection("current_year").doc('7WLtPHTN4hSokQ0qhOtP').get().then(function(doc)
+    var promises = [];
+    for(let i = 0; i < years.length; i++)
     {
-        var current_year = doc.data().year;
-        getRoundsForYear(current_year).then(function(rounds)
+        promises.push(getMasterDataForYear(years[i]));
+    }
+    Promise.all(promises).then(function(master_data_array, sorted_array)
+    {
+        var master_data = {};
+        var sorted = {};
+
+        for(let i = 0; i < master_data_array.length; i ++)
+        {
+            var master_data_keys = Object.keys(master_data);
+            var m_d = master_data_array[i];
+            var m_d_keys = Object.keys(m_d);
+            for(let j = 0; j < m_d_keys.length; j++)
+            {
+                if(master_data_keys.indexOf(m_d_keys[j]) == -1)
+                {
+                    master_data[m_d_keys[j]] = {};
+                    master_data[m_d_keys[j]]["FIRST_NAME"] = m_d[m_d_keys[j]]["FIRST_NAME"];
+                    master_data[m_d_keys[j]]["LAST_NAME"] = m_d[m_d_keys[j]]["LAST_NAME"];
+                    master_data[m_d_keys[j]]["ROUNDS"] = {};
+                }
+                var year = m_d[m_d_keys[j]]["YEAR"];
+                master_data[m_d_keys[j]][year] = {};
+                master_data[m_d_keys[j]][year]["TOTAL"] = m_d[m_d_keys[j]]["TOTAL"];
+                master_data[m_d_keys[j]][year]["PAR"] = m_d[m_d_keys[j]]["PAR"];
+                master_data[m_d_keys[j]][year]["POSITION"] = m_d[m_d_keys[j]]["POSITION"];
+                var rounds = m_d[m_d_keys[j]]["ROUNDS"];
+                var round_keys = Object.keys(rounds);
+                for(let k = 0; k < round_keys.length; k++)
+                {
+                    master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]] = {};
+                    master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["YEAR"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["YEAR"];
+                    master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["ROUND_NUM"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["ROUND_NUM"];
+                    master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["SCORECARD"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["SCORECARD"];
+                }
+            }
+
+            //sort on current year which should be year 0
+            var sorted = Object.keys(master_data).sort(function(a,b)
+                        {
+
+                            if(master_data[a][years[0]] && master_data[b][years[0]])
+                                return (master_data[a][years[0]]["TOTAL"]-master_data[b][years[0]]["TOTAL"])
+                        }).map(function(k)
+                        {
+                            return k;
+                        });
+            
+            
+
+        }
+        console.log(master_data);
+        callback(master_data, sorted);
+    });
+
+    
+    
+}
+
+var getMasterDataForYear = function(year)
+{
+    return new Promise(function(resolve, reject)
+    {
+        //first get all the rounds for the latest year
+        getRoundsForYear(year).then(function(rounds)
         {
             //then we need to get a list of all the players that played in the first round
-            getPlayersForRound(rounds[0]).then(function(players)
+            
+            getPlayersForRound(Object.keys(rounds)[0]).then(function(players)
             {
                 //then we need to get the total score of all rounds for that year for that player
-                var promises = [];
+                promises = [];
                 for(var i = 0; i < players.length; i++)
                 {
-                    promises.push(getPlayerTotalsforRounds(players[i], rounds));
+                    promises.push(getPlayerTotalsforRounds(players[i], Object.keys(rounds)));
                 }
                 Promise.all(promises).then(function(player_scores_array)
                 {
@@ -46,13 +110,28 @@ var getPlayerAndRoundData = function(callback)
                         {
                             var player_id = Object.keys(players_info[i])[0];
                             master_data[player_id] = players_info[i][player_id];
+                            master_data[player_id]["ROUNDS"] = {};
                         }
                         for(let i=0; i < player_scores_array.length; i++)
                         {
                             var player_id = Object.keys(player_scores_array[i])[0];
-                            master_data[player_id]["TOTAL"] = player_scores_array[i][player_id]["TOTAL"];
-                            master_data[player_id]["PAR"] = player_scores_array[i][player_id]["PAR"];
-                            master_data[player_id]["ROUNDS"] = player_scores_array[i][player_id]["ROUNDS"];
+                            var player_rounds = {};
+                            if(player_id)
+                            {
+                                master_data[player_id]["TOTAL"] = player_scores_array[i][player_id]["TOTAL"];
+                                master_data[player_id]["PAR"] = player_scores_array[i][player_id]["PAR"];
+                                
+                                for(let j = 0; j < Object.keys(player_scores_array[i][player_id]["ROUNDS"]).length; j++)
+                                {
+                                    var round_id = Object.keys(player_scores_array[i][player_id]["ROUNDS"])[j];
+                                    player_rounds[round_id] = {};
+                                    player_rounds[round_id]["YEAR"] = rounds[round_id]["YEAR"];
+                                    player_rounds[round_id]["ROUND_NUM"] = rounds[round_id]["ROUND_NUM"];
+                                    player_rounds[round_id]["SCORECARD"] = player_scores_array[i][player_id]["ROUNDS"][round_id]["SCORECARD"];
+                                }
+                                master_data[player_id]["ROUNDS"] = player_rounds;
+                                master_data[player_id]["YEAR"] = year;
+                            }
                         }   
                         //Now that we have the data we need...we can finally build the fucking scorecard tiles
                         //...but first we need to make sure they are ordered correctly!
@@ -86,7 +165,7 @@ var getPlayerAndRoundData = function(callback)
                             master_data[sorted[i]]["POSITION"] = position_text;
                             
                         }
-                        callback(master_data, sorted);
+                        resolve(master_data, sorted);
                         
                         
                     });
@@ -95,7 +174,6 @@ var getPlayerAndRoundData = function(callback)
         });
     });
 }
-
 
 var getRoundsForYear = function(year){
     return new Promise(function(resolve, reject)
@@ -107,7 +185,9 @@ var getRoundsForYear = function(year){
             querySnapshot.forEach(function(doc)
             {
                 var doc_data = doc.data();
-                rounds[doc_data.round_num-1] = doc.id;
+                rounds[doc.id] = {};
+                rounds[doc.id]["ROUND_NUM"] = doc_data.round_num;
+                rounds[doc.id]["YEAR"] = doc_data.year;
             });
             resolve(rounds);
         });
@@ -143,7 +223,7 @@ var getPlayerTotalsforRounds = function(player, rounds)
         {
             var total = 0;
             var par   = 0;
-            var rounds = [];
+            var rounds = {};
             querySnapshot.forEach(function(doc)
             {
                 var doc_data = doc.data();
@@ -151,7 +231,8 @@ var getPlayerTotalsforRounds = function(player, rounds)
                 {
                     total += totalScore(doc_data.score);
                     par =+ doc_data.par;
-                    rounds[rounds.length] = doc_data.round;
+                    rounds[doc_data.round] = {};
+                    rounds[doc_data.round]["SCORECARD"] = doc_data.score;
                 }
             });
 

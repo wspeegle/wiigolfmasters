@@ -5,6 +5,7 @@
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/style.css" />
 <script type="text/javascript" src="utils.js"></script>
 <script type="text/javascript" src="player_page.js"></script>
@@ -55,9 +56,9 @@
 
             <div id='year_tabs' class="tab"></div>
 
-        <div id='scorecards'>
-
-        </div>
+       
+        <div id='scorecards'></div>
+        
         
                     
 
@@ -67,9 +68,9 @@
 <script>
 initializeFirebase();
 var player_id = getQueryVariable("player_id");
-console.log(player_id);
 //Build this page based on the player_id given
 buildPlayerPage(player_id);
+
 
 
         

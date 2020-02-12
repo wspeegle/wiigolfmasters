@@ -699,6 +699,16 @@ z-index: -2;
     background-color: #009b77; 
 }
 
+.tabstats{
+    display: flex;
+    width: 900px;
+    height: 400px;
+    margin: auto;
+    background-color: #f5f5f5;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
 
 /* The Modal (background) */
 .modal {

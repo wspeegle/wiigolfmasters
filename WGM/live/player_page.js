@@ -32,7 +32,8 @@ function buildPlayerPage(player_id)
                 for(let j = 0; j < Object.keys(rounds_info).length; j++)
                 {
                     var round_id = Object.keys(rounds_info)[j];
-                    addScorecardRow(years_played[i], rounds_info[round_id]["ROUND_NUM"], player_id, round_id);
+                    if(rounds_info[round_id]["YEAR"] == years_played[i])
+                        addScorecardRow(years_played[i], rounds_info[round_id]["ROUND_NUM"], player_id, round_id);
                 }
                 createStatSection(years_played[i], master_data[player_id]);
             }

@@ -3,15 +3,22 @@
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/style.css" />
-<script type="text/javascript" src="db_utils.js"></script>
+<script type="text/javascript" src="utils.js"></script>
 <script type="text/javascript" src="scorecard.js"></script>
+<script type="text/javascript" src="scorecard_banner.js"></script>
 <html>
 <title>2020 Wii Golf Masters</title>
 
 <body>
-    <div class="player_container">
+    <div class='leaderboard_holder'>
+        <div class='leaderboard' id='leaderboard'>
+        </div>
+    </div>
+
+    <div class="player_container" style='margin-top: 100px'>
         <form>
             Round: <select id='round_select' onchange='getScorecardForRound()'></select>
             <br><br>
@@ -85,25 +92,24 @@
             </table>
             <br>
             <input type="button" value='Add Player' onclick='addRow()' style='float:left;' class="update_scorecard_button">
-            <input type="button" value='Update' onclick='updateScorecard()' style='float:right;' class="update_scorecard_button">
+            <input type="button" value='Update Scorecard' onclick='updateScorecard()' style='float:right;' class="update_scorecard_button">
         </form>
+        <br><br><br>
+
+
+        <select id="editUserSelect" onchange='fillInUserFields()'>
+        First name: <input type="text" id = 'user_first_name'> Last Name: <input type="text" id = 'user_last_name'>
+        <input type="file" accept="image/*" id="userImageInput">
+        <input type="button" value='Update User' onclick='updateUser()' style='float:right;' class="update_scorecard_button">
+
 </body>
 
 </html>
 
 <script>
 // Initialize Cloud Firestore through Firebase
-firebase.initializeApp
-({
-    apiKey: "AIzaSyB3qmQNbtcpQeLSn3mHsAoYtDxGL-uHL6c",
-    authDomain: "wiigolfmasters.firebaseapp.com",
-    databaseURL: "https://wiigolfmasters.firebaseio.com",
-    projectId: "wiigolfmasters",
-    storageBucket: "wiigolfmasters.appspot.com",
-    messagingSenderId: "660957033972",
-    appId: "1:660957033972:web:59179876aae65a91b875a1",
-    measurementId: "G-8TGBMCXL58"
-});
+initializeFirebase();
+
 var db = firebase.firestore();
 
 //Build round selector dropdown
@@ -126,6 +132,25 @@ db.collection("round").orderBy("year", "desc").orderBy("round_num", "desc").get(
 {
     console.log(error.message);
 });
+
+//Fill in user dropdown for editing users
+db.collection("players").get().then(function(querySnapshot)
+{
+    var userSelect = document.getElementById('editUserSelect');
+    var opt = document.createElement('option');
+    opt.appendChild(document.createTextNode("-"));
+    userSelect.appendChild(opt);
+    querySnapshot.forEach(function(doc)
+    {
+        var doc_data = doc.data();
+        opt = document.createElement('option');
+        opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
+        opt.value = doc.id;
+        userSelect.appendChild(opt);
+    });
+});
+
+
 
 //Add a new row to the current scorecard
 function addRow(user_value)
@@ -196,6 +221,7 @@ function updateScorecard()
     var score           = {};
     var update_status   = {};
     var batch           = db.batch();
+    const par_array     = [4,3,5,3,5,4,4,3,5,4,3,5,3,5,4,4,3,5];
 
     for (let i = 2; i < table.rows.length; i++)
     {
@@ -208,9 +234,12 @@ function updateScorecard()
         
         //populate the score array with the values of the row
         let table_row = table.rows[i];
+        var par = 0;
         for (var j = 1; j < 19; j++)
         {
             score[j - 1] = table_row.cells[j].children[0].value;
+            if(score[j - 1] != '' && score[j - 1] != 0)
+                par += par_array[j-1];
         }
 
         
@@ -220,9 +249,10 @@ function updateScorecard()
             var player_score_doc = db.collection('player_score').doc(player_score_doc_id);
             batch.set(player_score_doc, 
             {
-                player: '/player/' + user_id,
-                round: '/round/' + round_id,
-                score: score
+                player: user_id,
+                round: round_id,
+                score: score,
+                par: par
             }, {merge:true});
     }
 
@@ -248,7 +278,7 @@ function getScorecardRowScores(select)
     var table                   = document.getElementById('update_scores');
     var db                      = firebase.firestore();
     var player_scores           = db.collection("player_score");
-    var players_round_scorecard = player_scores.where("player", '==', '/player/' + user_id).where("round", '==', '/round/' + round_id);
+    var players_round_scorecard = player_scores.where("player", '==', user_id).where("round", '==', round_id);
     players_round_scorecard.get().then(function(querySnapshot)
     {
         //clear out the row's existing values
@@ -293,7 +323,7 @@ function getScorecardForRound()
     var table                   = document.getElementById('update_scores');
     var db                      = firebase.firestore();
     var player_scores           = db.collection("player_score");
-    var players_round_scorecard = player_scores.where("round", '==', '/round/' + round_id);
+    var players_round_scorecard = player_scores.where("round", '==', round_id);
     //clear any table rows that have been added
     for(var i = 2; i < table.rows.length;)
     {
@@ -305,7 +335,7 @@ function getScorecardForRound()
     {
         querySnapshot.forEach(function(doc)
         {
-            var user_value = doc.data().player.split('/')[2];
+            var user_value = doc.data().player;
             var row_num = addRow(user_value);
         });
     });
@@ -336,5 +366,53 @@ window.onclick = function(event)
         }
     }
 }
+
+function fillInUserFields()
+{
+    let userSelect = document.getElementById('editUserSelect');
+    let user_id    = userSelect[userSelect.selectedIndex].value;
+    let first_name_input = document.getElementById('user_first_name');
+    let last_name_input  = document.getElementById('user_last_name');
+    let db = firebase.firestore();
+    db.collection('players').doc(user_id).get().then(function(doc)
+    {
+        first_name_input.value = doc.data().first_name;
+        last_name_input.value = doc.data().last_name;
+    })
+    
+    
+
+}
+var userImage;
+let fileUpload = document.getElementById("userImageInput");
+fileUpload.addEventListener('change', function(evt) {
+      userImage = evt.target.files[0]; // upload the first file only
+  });
+
+function updateUser()
+{
+    let userSelect = document.getElementById('editUserSelect');
+    let user_id    = userSelect[userSelect.selectedIndex].value;
+    let first_name_input = document.getElementById('user_first_name');
+    let last_name_input  = document.getElementById('user_last_name');
+
+    let storageRef = firebase.storage().ref('images/players/'+user_id);
+    let uploadTask = storageRef.put(userImage);
+    let first_name = first_name_input.value;
+    let last_name  = last_name_input.value;
+    db.collection('players').doc(user_id).set(
+    {
+        first_name: first_name,
+        last_name: last_name,
+        player_image: 'images/players/'+user_id
+    }, {merge:true});
+
+
+}
+createScorecardBanner("leaderboard");
+
+
+  
+
 
 </script>

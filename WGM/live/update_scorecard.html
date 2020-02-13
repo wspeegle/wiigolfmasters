@@ -102,9 +102,24 @@
         <input type="file" accept="image/*" id="userImageInput">
         <input type="button" value='Update User' onclick='updateUser()' style='float:right;' class="update_scorecard_button">
 
+
+<br><br><br>
+        <!-- Add a placeholder for the Twitch embed -->
+    <div style='margin-top: 50px;' id="twitch-embed"></div>
+
+    <!-- Load the Twitch embed script -->
+    <!-- <script src="https://embed.twitch.tv/embed/v1.js"></script> -->
+
 </body>
 
 </html>
+<!-- <script type="text/javascript">
+    new Twitch.Embed("twitch-embed", {
+      width: 1500,
+      height: 500,
+      channel: "wiigolfmasters"
+    });
+  </script> -->
 
 <script>
 // Initialize Cloud Firestore through Firebase

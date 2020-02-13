@@ -28,12 +28,25 @@ function buildPlayerPage(player_id)
             createYearTabs(years_played);
             for(let i = 0; i < years_played.length; i++)
             {
-                createScoreCard(years_played[i]);
-                for(let j = 0; j < Object.keys(rounds_info).length; j++)
+                var this_years_rounds = [];
+                //Order rounds in the year by round num
+                for(let k = 0; k < Object.keys(rounds_info).length; k++)
                 {
-                    var round_id = Object.keys(rounds_info)[j];
+                    var round_id = Object.keys(rounds_info)[k];
                     if(rounds_info[round_id]["YEAR"] == years_played[i])
-                        addScorecardRow(years_played[i], rounds_info[round_id]["ROUND_NUM"], player_id, round_id);
+                    {
+                        var round_info = {};
+                        round_info[round_id] = rounds_info[round_id];
+                        this_years_rounds[rounds_info[round_id]["ROUND_NUM"]-1] = round_info;
+                    }
+                }
+                console.log(this_years_rounds);
+                createScoreCard(years_played[i]);
+                for(let j = 0; j < Object.keys(this_years_rounds).length; j++)
+                {
+                    var round_id = Object.keys(this_years_rounds)[j];
+                    if(this_years_rounds[round_id]["YEAR"] == years_played[i])
+                        addScorecardRow(years_played[i], this_years_rounds[round_id]["ROUND_NUM"], player_id, round_id);
                 }
                 createStatSection(years_played[i], master_data[player_id]);
             }
@@ -164,6 +177,9 @@ function openYear(evt) {
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(evt.target.id+"_content").style.display = "block";
     evt.target.className += " active";
+    var year = evt.target.id.split('_')[0];
+    document.getElementById(year + "_total").click();
+    document.getElementById(year + "_total").className += " active";
 }
 
 function createScoreCard(year)
@@ -318,10 +334,9 @@ function createStatTabs(year, player_data)
     //first create all the round buttons to activate each individual graph
     var rounds = player_data["ROUNDS"];
     var rounds_div = document.createElement('div');
-    var parent_div = document.getElementById('scorecards');
-    rounds_div.id = 'rounds_tab';
+    var parent_div = document.getElementById(year + '_tab_content');
+    rounds_div.id = year + '_rounds_tab';
     rounds_div.className = 'tab';
-    console.log(player_data);
     var round_button = document.createElement('button');
     round_button.classList = 'tablinks graphtabs';
     round_button.id = year+'_total';
@@ -330,13 +345,17 @@ function createStatTabs(year, player_data)
     rounds_div.appendChild(round_button);
     for(let i = 0; i < Object.keys(rounds).length; i++)
     {
+        
         var round = rounds[Object.keys(rounds)[i]];
-        round_button = document.createElement('button');
-        round_button.classList = 'tablinks graphtabs';
-        round_button.id = year + "_R" + round["ROUND_NUM"];
-        round_button.innerHTML = 'Round ' + round["ROUND_NUM"];
-        round_button.addEventListener('click', openChart);
-        rounds_div.appendChild(round_button);
+        if(round["YEAR"] == year)
+        {
+            round_button = document.createElement('button');
+            round_button.classList = 'tablinks graphtabs';
+            round_button.id = year + "_R" + round["ROUND_NUM"];
+            round_button.innerHTML = 'Round ' + round["ROUND_NUM"];
+            round_button.addEventListener('click', openChart);
+            rounds_div.appendChild(round_button);
+        }
     }
     parent_div.appendChild(rounds_div);
 
@@ -348,7 +367,7 @@ function createStatTabs(year, player_data)
 
 function createGraphs(year, player_data)
 {
-    var parent_div = document.getElementById('scorecards');
+    var parent_div = document.getElementById(year + '_tab_content');
     var rounds = player_data["ROUNDS"];
     var wrapper_div = document.createElement('div');
     wrapper_div.className = 'tabStats';

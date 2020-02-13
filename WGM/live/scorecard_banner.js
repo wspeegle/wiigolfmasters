@@ -12,6 +12,8 @@ function createScorecardBanner(parent_div)
             {
                 lb_div.appendChild(createLeaderboardCard(master_data[sorted[i]], sorted[i], master_data[sorted[i]][current_year]["POSITION"], years[0]));
             }
+            var max_players = sorted.length;
+            createScrollButtons(max_players, lb_div);
         });
     }); 
 }
@@ -63,3 +65,40 @@ function createLeaderboardCard(player_data, player_id, position, year)
     name_wrapper.appendChild(score_div);
     return wrapper;
 }
+
+function createScrollButtons(max_players, lb_div)
+{
+
+    var right_button = document.createElement('div');
+    right_button.className = 'lb_button';
+    right_button.id = 'rightButton';
+    var arrow = document.createElement('i');
+    arrow.className = 'lb_button_right';
+    right_button.appendChild(arrow);
+    right_button.addEventListener('click', function()
+    {
+        event.preventDefault();
+        if(lb_div.scrollLeft >= 0 && lb_div.scrollLeft < max_players * 325)
+        {
+        lb_div.scrollLeft = lb_div.scrollLeft+ 325;
+        }
+    });
+    lb_div.appendChild(right_button);
+
+    var left_button = document.createElement('div');
+    left_button.className = 'lb_button';
+    left_button.id = 'leftButton';
+    var arrow = document.createElement('i');
+    arrow.className = 'lb_button_left';
+    left_button.appendChild(arrow);
+    left_button.addEventListener('click', function()
+    {
+        event.preventDefault();
+        if(lb_div.scrollLeft >= 0 && lb_div.scrollLeft < max_players * 325)
+            {
+            lb_div.scrollLeft = lb_div.scrollLeft - 325;
+            }
+    });
+    lb_div.appendChild(left_button);
+}
+

@@ -73,7 +73,6 @@ var getPlayerAndRoundData = function(years, callback)
                         
             }
     }
-        console.log(master_data);
         callback(master_data, sorted);
     });
 
@@ -229,23 +228,24 @@ var getPlayerTotalsforRounds = function(player, rounds)
         {
             var total = 0;
             var par   = 0;
-            var rounds = {};
+            var player_rounds = {};
             querySnapshot.forEach(function(doc)
             {
                 var doc_data = doc.data();
                 if(doc_data.player == player)
                 {
                     total += totalScore(doc_data.score);
-                    par =+ doc_data.par;
-                    rounds[doc_data.round] = {};
-                    rounds[doc_data.round]["SCORECARD"] = doc_data.score;
+                    par += doc_data.par;
+                    player_rounds[doc_data.round] = {};
+                    player_rounds[doc_data.round]["SCORECARD"] = doc_data.score;
                 }
             });
 
-            player_totals[player] = {"TOTAL": total, "PAR": par, "ROUNDS": rounds};
+            player_totals[player] = {"TOTAL": total, "PAR": par, "ROUNDS": player_rounds};
+            resolve(player_totals);
         });
         
-        resolve(player_totals)
+        
     });
 }
 
@@ -289,7 +289,20 @@ function totalScore(score_array)
         total += isNaN(parseInt(score_array[i])) ? 0 : parseInt(score_array[i]);
     }
     return total;
+}
 
+function parForScorecard(score_array)
+{
+    const par_array     = [4,3,5,3,5,4,4,3,5,4,3,5,3,5,4,4,3,5];
+    var par = 0;
+    for(var i = 0; i < Object.keys(score_array).length; i++)
+    {
+        if(score_array[i] > 0)
+        {
+            par += par_array[i];
+        }
+    }
+    return par;
 }
 
 var getRounds = function()

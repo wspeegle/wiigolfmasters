@@ -30,46 +30,49 @@ var getPlayerAndRoundData = function(years, callback)
         {
             var master_data_keys = Object.keys(master_data);
             var m_d = master_data_array[i];
-            var m_d_keys = Object.keys(m_d);
-            for(let j = 0; j < m_d_keys.length; j++)
+            if(m_d)
             {
-                if(master_data_keys.indexOf(m_d_keys[j]) == -1)
+                var m_d_keys = Object.keys(m_d);
+                for(let j = 0; j < m_d_keys.length; j++)
                 {
-                    master_data[m_d_keys[j]] = {};
-                    master_data[m_d_keys[j]]["FIRST_NAME"] = m_d[m_d_keys[j]]["FIRST_NAME"];
-                    master_data[m_d_keys[j]]["LAST_NAME"] = m_d[m_d_keys[j]]["LAST_NAME"];
-                    master_data[m_d_keys[j]]["ROUNDS"] = {};
+                    if(master_data_keys.indexOf(m_d_keys[j]) == -1)
+                    {
+                        master_data[m_d_keys[j]] = {};
+                        master_data[m_d_keys[j]]["FIRST_NAME"] = m_d[m_d_keys[j]]["FIRST_NAME"];
+                        master_data[m_d_keys[j]]["LAST_NAME"] = m_d[m_d_keys[j]]["LAST_NAME"];
+                        master_data[m_d_keys[j]]["ROUNDS"] = {};
+                    }
+                    var year = m_d[m_d_keys[j]]["YEAR"];
+                    master_data[m_d_keys[j]][year] = {};
+                    master_data[m_d_keys[j]][year]["TOTAL"] = m_d[m_d_keys[j]]["TOTAL"];
+                    master_data[m_d_keys[j]][year]["PAR"] = m_d[m_d_keys[j]]["PAR"];
+                    master_data[m_d_keys[j]][year]["POSITION"] = m_d[m_d_keys[j]]["POSITION"];
+                    var rounds = m_d[m_d_keys[j]]["ROUNDS"];
+                    var round_keys = Object.keys(rounds);
+                    for(let k = 0; k < round_keys.length; k++)
+                    {
+                        master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]] = {};
+                        master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["YEAR"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["YEAR"];
+                        master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["ROUND_NUM"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["ROUND_NUM"];
+                        master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["SCORECARD"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["SCORECARD"];
+                    }
                 }
-                var year = m_d[m_d_keys[j]]["YEAR"];
-                master_data[m_d_keys[j]][year] = {};
-                master_data[m_d_keys[j]][year]["TOTAL"] = m_d[m_d_keys[j]]["TOTAL"];
-                master_data[m_d_keys[j]][year]["PAR"] = m_d[m_d_keys[j]]["PAR"];
-                master_data[m_d_keys[j]][year]["POSITION"] = m_d[m_d_keys[j]]["POSITION"];
-                var rounds = m_d[m_d_keys[j]]["ROUNDS"];
-                var round_keys = Object.keys(rounds);
-                for(let k = 0; k < round_keys.length; k++)
-                {
-                    master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]] = {};
-                    master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["YEAR"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["YEAR"];
-                    master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["ROUND_NUM"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["ROUND_NUM"];
-                    master_data[m_d_keys[j]]["ROUNDS"][round_keys[k]]["SCORECARD"] = m_d[m_d_keys[j]]["ROUNDS"][round_keys[k]]["SCORECARD"];
-                }
+
+                //sort on current year which should be year 0
+                var sorted = Object.keys(master_data).sort(function(a,b)
+                            {
+
+                                if(master_data[a][years[0]] && master_data[b][years[0]])
+                                    return (master_data[a][years[0]]["TOTAL"]-master_data[b][years[0]]["TOTAL"])
+                            }).map(function(k)
+                            {
+                                return k;
+                            });
+                
+                
+                        
             }
-
-            //sort on current year which should be year 0
-            var sorted = Object.keys(master_data).sort(function(a,b)
-                        {
-
-                            if(master_data[a][years[0]] && master_data[b][years[0]])
-                                return (master_data[a][years[0]]["TOTAL"]-master_data[b][years[0]]["TOTAL"])
-                        }).map(function(k)
-                        {
-                            return k;
-                        });
-            
-            
-
-        }
+    }
         console.log(master_data);
         callback(master_data, sorted);
     });
@@ -86,91 +89,94 @@ var getMasterDataForYear = function(year)
         getRoundsForYear(year).then(function(rounds)
         {
             //then we need to get a list of all the players that played in the first round
-            
-            getPlayersForRound(Object.keys(rounds)[0]).then(function(players)
+            if(Object.keys(rounds).length > 0)
             {
-                //then we need to get the total score of all rounds for that year for that player
-                promises = [];
-                for(var i = 0; i < players.length; i++)
+                getPlayersForRound(Object.keys(rounds)[0]).then(function(players)
                 {
-                    promises.push(getPlayerTotalsforRounds(players[i], Object.keys(rounds)));
-                }
-                Promise.all(promises).then(function(player_scores_array)
-                {
-                    
+                    //then we need to get the total score of all rounds for that year for that player
                     promises = [];
                     for(var i = 0; i < players.length; i++)
                     {
-                        promises.push(getPlayerName(players[i]));
+                        promises.push(getPlayerTotalsforRounds(players[i], Object.keys(rounds)));
                     }
-                    Promise.all(promises).then(function(players_info)
+                    Promise.all(promises).then(function(player_scores_array)
                     {
-                        var master_data = {};
-                        for(let i = 0; i < players_info.length; i++)
+                        
+                        promises = [];
+                        for(var i = 0; i < players.length; i++)
                         {
-                            var player_id = Object.keys(players_info[i])[0];
-                            master_data[player_id] = players_info[i][player_id];
-                            master_data[player_id]["ROUNDS"] = {};
+                            promises.push(getPlayerName(players[i]));
                         }
-                        for(let i=0; i < player_scores_array.length; i++)
+                        Promise.all(promises).then(function(players_info)
                         {
-                            var player_id = Object.keys(player_scores_array[i])[0];
-                            var player_rounds = {};
-                            if(player_id)
+                            var master_data = {};
+                            for(let i = 0; i < players_info.length; i++)
                             {
-                                master_data[player_id]["TOTAL"] = player_scores_array[i][player_id]["TOTAL"];
-                                master_data[player_id]["PAR"] = player_scores_array[i][player_id]["PAR"];
-                                
-                                for(let j = 0; j < Object.keys(player_scores_array[i][player_id]["ROUNDS"]).length; j++)
+                                var player_id = Object.keys(players_info[i])[0];
+                                master_data[player_id] = players_info[i][player_id];
+                                master_data[player_id]["ROUNDS"] = {};
+                            }
+                            for(let i=0; i < player_scores_array.length; i++)
+                            {
+                                var player_id = Object.keys(player_scores_array[i])[0];
+                                var player_rounds = {};
+                                if(player_id)
                                 {
-                                    var round_id = Object.keys(player_scores_array[i][player_id]["ROUNDS"])[j];
-                                    player_rounds[round_id] = {};
-                                    player_rounds[round_id]["YEAR"] = rounds[round_id]["YEAR"];
-                                    player_rounds[round_id]["ROUND_NUM"] = rounds[round_id]["ROUND_NUM"];
-                                    player_rounds[round_id]["SCORECARD"] = player_scores_array[i][player_id]["ROUNDS"][round_id]["SCORECARD"];
+                                    master_data[player_id]["TOTAL"] = player_scores_array[i][player_id]["TOTAL"];
+                                    master_data[player_id]["PAR"] = player_scores_array[i][player_id]["PAR"];
+                                    
+                                    for(let j = 0; j < Object.keys(player_scores_array[i][player_id]["ROUNDS"]).length; j++)
+                                    {
+                                        var round_id = Object.keys(player_scores_array[i][player_id]["ROUNDS"])[j];
+                                        player_rounds[round_id] = {};
+                                        player_rounds[round_id]["YEAR"] = rounds[round_id]["YEAR"];
+                                        player_rounds[round_id]["ROUND_NUM"] = rounds[round_id]["ROUND_NUM"];
+                                        player_rounds[round_id]["SCORECARD"] = player_scores_array[i][player_id]["ROUNDS"][round_id]["SCORECARD"];
+                                    }
+                                    master_data[player_id]["ROUNDS"] = player_rounds;
+                                    master_data[player_id]["YEAR"] = year;
                                 }
-                                master_data[player_id]["ROUNDS"] = player_rounds;
-                                master_data[player_id]["YEAR"] = year;
-                            }
-                        }   
-                        //Now that we have the data we need...we can finally build the fucking scorecard tiles
-                        //...but first we need to make sure they are ordered correctly!
-                        //How the hell do we account for missing the cut
-                        var sorted = Object.keys(master_data).sort(function(a,b)
-                        {
-                            return (master_data[a]["TOTAL"]-master_data[b]["TOTAL"])
-                        }).map(function(k)
-                        {
-                            return k;
-                        });
-                        var position_rank = 1;
-                        var position_text = "1";
-                        
-                        for(let i = 0; i < sorted.length; i++)
-                        {
-                            if(i > 0 && master_data[sorted[i]]["TOTAL"] == master_data[sorted[i-1]]["TOTAL"])
+                            }   
+                            //Now that we have the data we need...we can finally build the fucking scorecard tiles
+                            //...but first we need to make sure they are ordered correctly!
+                            //How the hell do we account for missing the cut
+                            var sorted = Object.keys(master_data).sort(function(a,b)
                             {
-                                //there is a tie we need to display that
-                                position_text = "T"+position_rank;                            
-                            }else if(i+1 < sorted.length && master_data[sorted[i]]["TOTAL"] == master_data[sorted[i+1]]["TOTAL"] && master_data[sorted[i]]["TOTAL"] != master_data[sorted[i-1]]["TOTAL"])
-                            {//First score of a series of ties
-                                position_rank++;
-                                position_text = "T"+position_rank;
-                                
-                            }else
+                                return (master_data[a]["TOTAL"]-master_data[b]["TOTAL"])
+                            }).map(function(k)
                             {
-                                position_rank = i+1;
-                                position_text = position_rank;
-                            }
-                            master_data[sorted[i]]["POSITION"] = position_text;
+                                return k;
+                            });
+                            var position_rank = 1;
+                            var position_text = "1";
                             
-                        }
-                        resolve(master_data, sorted);
-                        
-                        
+                            for(let i = 0; i < sorted.length; i++)
+                            {
+                                if(i > 0 && master_data[sorted[i]]["TOTAL"] == master_data[sorted[i-1]]["TOTAL"])
+                                {
+                                    //there is a tie we need to display that
+                                    position_text = "T"+position_rank;                            
+                                }else if(i+1 < sorted.length && master_data[sorted[i]]["TOTAL"] == master_data[sorted[i+1]]["TOTAL"] && master_data[sorted[i]]["TOTAL"] != master_data[sorted[i-1]]["TOTAL"])
+                                {//First score of a series of ties
+                                    position_rank++;
+                                    position_text = "T"+position_rank;
+                                    
+                                }else
+                                {
+                                    position_rank = i+1;
+                                    position_text = position_rank;
+                                }
+                                master_data[sorted[i]]["POSITION"] = position_text;
+                                
+                            }
+                            resolve(master_data, sorted);
+                            
+                            
+                        });
                     });
                 });
-            });
+            }
+                else resolve(null, null);
         });
     });
 }

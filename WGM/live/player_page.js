@@ -367,6 +367,8 @@ function createGraphs(year, player_data)
     var wrapper_div = document.createElement('div');
     wrapper_div.className = 'tabStats';
     wrapper_div.id = year + "_total_graph";
+    wrapper_div.style.backgroundColor = 'white';
+    wrapper_div.style.border = '1px solid #d9d9d6';
     var canvas_wrapper = document.createElement('div');
     canvas_wrapper.className = 'canvasWrapper';
     var chart_canvas = document.createElement('canvas');

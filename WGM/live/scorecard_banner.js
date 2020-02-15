@@ -12,6 +12,8 @@ function createScorecardBanner(parent_div)
             {
                 lb_div.appendChild(createLeaderboardCard(master_data[sorted[i]], sorted[i], master_data[sorted[i]][current_year]["POSITION"], years[0]));
             }
+            var max_players = sorted.length;
+            createScrollButtons(max_players, lb_div);
         });
     }); 
 }
@@ -37,7 +39,8 @@ function createLeaderboardCard(player_data, player_id, position, year)
     var name_wrapper = document.createElement('div');
     var name_div = document.createElement('div');
     name_div.className = 'cardName';
-    name_div.innerHTML = player_data["FIRST_NAME"] + " " + player_data["LAST_NAME"];
+    //name_div.innerHTML = player_data["FIRST_NAME"] + " " + player_data["LAST_NAME"];
+    name_div.innerHTML = player_data["LAST_NAME"].toUpperCase();
     name_wrapper.appendChild(name_div);
     wrapper.appendChild(name_wrapper);
     var score_div = document.createElement('div');
@@ -59,7 +62,49 @@ function createLeaderboardCard(player_data, player_id, position, year)
     }
     let holes_played = (player_data[year]["PAR"] / 72)*18;
     score_div.appendChild(score_span);
-    score_div.innerHTML += "Thru " + holes_played;
+    var thru_div = document.createElement('div');
+    thru_div.innerHTML = " Thru " + holes_played;
+    thru_div.className = 'thru';
+    score_div.appendChild(thru_div);
     name_wrapper.appendChild(score_div);
     return wrapper;
 }
+
+function createScrollButtons(max_players, lb_div)
+{
+
+    var right_button = document.createElement('div');
+    right_button.className = 'lb_button';
+    right_button.id = 'rightButton';
+    var arrow = document.createElement('span');
+    arrow.className = 'arrow_span';
+    arrow.innerHTML = '...';
+    right_button.appendChild(arrow);
+    right_button.addEventListener('click', function()
+    {
+        event.preventDefault();
+        if(lb_div.scrollLeft >= 0 && lb_div.scrollLeft < max_players * 241)
+        {
+        lb_div.scrollLeft = lb_div.scrollLeft+ 241;
+        }
+    });
+    lb_div.appendChild(right_button);
+
+    var left_button = document.createElement('div');
+    left_button.className = 'lb_button';
+    left_button.id = 'leftButton';
+    var arrow = document.createElement('span');
+    arrow.className = 'arrow_span';
+    arrow.innerHTML = "...";
+    left_button.appendChild(arrow);
+    left_button.addEventListener('click', function()
+    {
+        event.preventDefault();
+        if(lb_div.scrollLeft >= 0 && lb_div.scrollLeft < max_players * 241)
+            {
+            lb_div.scrollLeft = lb_div.scrollLeft - 241;
+            }
+    });
+    lb_div.appendChild(left_button);
+}
+

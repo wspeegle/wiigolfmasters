@@ -6,6 +6,7 @@ html, body{
     height: 100%;
     width: 100%;
     z-index: -1;
+    background-color: #f3f3f373
 }
 
 @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
@@ -20,9 +21,9 @@ html, body{
     flex-direction: row;
     left: 0;
     top:0;
-    height: 85px;
+    height: 75px;
     width: 100%;
-    border-bottom: 1px solid #bcbcbc;
+    border-bottom: 1px solid  #d9d9d6;
     z-index: 999998;
     background-color: white;
     margin-left: 0;
@@ -38,6 +39,7 @@ html, body{
     left: 0;
     top: 0;
     height: 85px;
+    z-index:99999;
 }
 .leaderboard_holder:hover .lb_button{
     display: inline-block;
@@ -45,36 +47,66 @@ html, body{
 
 .lb_button{
     display: none;
-    width: 32px;
-    height: 85px;
-    right: 0;
-    top: 0;
+    width: 60px;
+    height: 60px;
+    right: 10px;
+    top: 7px;
     position: fixed;
-    background-color: grey;
+    background-color: #d9d9d6;
     text-align: center;
-    /* border: 1px solid #bcbcbc; */
-    border: 0;
-    border-bottom: 1px solid #bcbcbc;
-    
+    border-radius: 64px;
     z-index: 999999;
+    opacity: .5;
+    color: white;
+    line-height: 1.3;
+    font-size: 50px;
+    cursor: default;
 }
 
 #leftButton.lb_button
 {
-    right: 32px;
+    left: 10px;
 }
 
 .lb_button:hover{
-    background-color: #bcbcbc;
+    opacity:.75;
 }
+
+i {
+    border: solid #076652;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 12px;
+    
+  }
+  
+  .lb_button_right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    margin-right: 14px;
+    margin-bottom: 2px;
+  }
+  .lb_button_left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    margin-left: 14px;
+    margin-bottom: 2px;
+  }
+
+  .arrow_span{
+    color: #076652;
+    vertical-align: top;
+    text-align: center;
+    line-height: .7;
+  }
 
 .leaderboardCard{
     display: flex;
     flex: 0 0 auto;
     flex-direction: row;
-    height: 85px;
-    width: 300px;
-    border-left: 1px solid #bcbcbc;
+    height: 75px;
+    width: 215px;
+    border-left: 1px solid #d9d9d6;
 }
 
 .leaderboardCard:hover{
@@ -89,50 +121,62 @@ html, body{
 
 .rank{
     padding-top: 3px;
-    margin-left: -10px;
-    font-size: 1em;
-    color: grey;
+    margin-left: -20px;
+    font-size: .95rem;
+    color: #888b8d;
 }
 
 .cardPic{
-    padding-left: 15px;
+    padding-left: 5px;
     padding-top: 3px;
-    height: 75px;
-    width: 50px;
+    height: 60px;
+    width: 60px;
 }
 
 .cardName{
-    padding-left: 25px;
-    padding-top: 12px;
+    padding-left: 10px;
+    padding-top: 15px;
     text-align: left;
-    color: grey;
-    font-size: 1em;
+    color: #888b8d;
+    font-size: 1.1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .cardScore{
-    padding-left: 25px;
-    vertical-align: center;
+    padding-left: 10px;
+    vertical-align: middle;
     text-align: left;
-    font-size: .7em;
-    color: grey;
+    font-size: 1em;
+    color: #888b8d;
+}
+
+.thru{
+    font-size: .8rem;
+    color: #888b8d;
+    display: inline-block;
+    padding-left: 7px;
+    vertical-align: top;
+    padding-top: 9px;
 }
 
 .over{
     color: black;
-    font-size: 1.5em;
+    /* font-size: 1.5em; */
 }
 
 .under{
-    color: red;
-    font-size:1.5em;
+    color: #ef2a2a;
+    /* font-size:1.5em; */
 }
 
 
 .playerImage{
-    padding-top: 5px;
-    border-radius: 50%;
+    border-radius: 60px;
     width: 60px;
-    height: 60px; 
+    height: 60px;
+    border: 1px solid #076652;
+    margin-top: 3px;
 }
 
 .header{
@@ -394,7 +438,7 @@ a{
 
 
 
-.player_card {border-collapse:collapse;border-spacing:0;}
+.player_card {border-collapse:collapse;border-spacing:0; background-color: white}
         .player_card td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
         .player_card th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
         .player_card .holeNos{font-size:18px;font-family:Tahoma, Geneva, sans-serif !important;;background-color:#076652;color:#ffffff;text-align:center}
@@ -408,12 +452,14 @@ a{
     text-align: center;
     align-content: center;
     margin: auto;
-    z-index: -1;
+    z-index: 1;
+    margin-top: 115px;
+    /* background-color:white; */
 }
 
 .tab {
     overflow: hidden;
-
+    margin-top:15px;
   }
 
 .tab#roundsTab{
@@ -455,13 +501,13 @@ a{
     height: 265px;
     background-color: #076652;
     border: 1px solid lightgray;
-    z-index: -1;
+    /* z-index: -1; */
 }
 
 .player_header_bottom{
     position: absolute;
     width: 100%;
-    height: 115px;
+    height: 100px;
     background-color: white;
     bottom: 0;
     margin: 0;
@@ -475,15 +521,15 @@ a{
     padding-top: 75px;
     height: 150px;
     width: 150px;
-    z-index: 9999;
+    z-index: 2;
 }
 
 .playerImage_big{
-    padding-top: 5px;
     border-radius: 50%;
     width: 150px;
     height: 150px;
     border: 10px solid white;
+    margin-top: 5px;
 }
 
 .player_name{
@@ -500,7 +546,7 @@ a{
     display: inline-block;
 position: absolute;
 width: 100px;
-height: 115px;
+height: 100px;
 right: 300px;
 text-align: center;
 border-left: 1px solid lightgrey;
@@ -510,7 +556,7 @@ border-left: 1px solid lightgrey;
     display: inline-block;
     position: absolute;
     width: 100px;
-    height: 115px;
+    height: 100px;
     right: 200px;
     text-align: center;
 }
@@ -519,7 +565,7 @@ border-left: 1px solid lightgrey;
     display: inline-block;
     position: absolute;
     width: 100px;
-    height: 115px;
+    height: 100px;
     right: 100px;
     text-align: center;
 }
@@ -528,19 +574,19 @@ border-left: 1px solid lightgrey;
     display: inline-block;
     position: absolute;
     width: 100px;
-    height: 115px;
+    height: 100px;
     right: 0px;
     text-align: center;
 }
 
 .player_title_sub_text{
     font-size: 1em;
-    color: grey;
+    color: #888b8d;
     padding-top: 35px;
 }
 .player_title_text{
 
-    font-size: 3em;
+    font-size: 2em;
     font-weight: 50;
     font-family:Tahoma, Geneva, sans-serif !important;
 
@@ -704,7 +750,7 @@ z-index: -2;
     width: 900px;
     height: 400px;
     margin: auto;
-    background-color: #f5f5f5;
+    background-color: white;
     padding-top: 50px;
     padding-bottom: 50px;
 }

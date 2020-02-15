@@ -28,25 +28,13 @@ function buildPlayerPage(player_id)
             createYearTabs(years_played);
             for(let i = 0; i < years_played.length; i++)
             {
-                var this_years_rounds = [];
-                //Order rounds in the year by round num
-                for(let k = 0; k < Object.keys(rounds_info).length; k++)
-                {
-                    var round_id = Object.keys(rounds_info)[k];
-                    if(rounds_info[round_id]["YEAR"] == years_played[i])
-                    {
-                        var round_info = {};
-                        round_info[round_id] = rounds_info[round_id];
-                        this_years_rounds[rounds_info[round_id]["ROUND_NUM"]-1] = round_info;
-                    }
-                }
-                console.log(this_years_rounds);
+                var rounds_ordered = orderRoundsByRoundNumForYear(rounds_info, years_played[i]);
                 createScoreCard(years_played[i]);
-                for(let j = 0; j < Object.keys(this_years_rounds).length; j++)
+                for(let j = 0; j < Object.keys(rounds_ordered).length; j++)
                 {
-                    var round_id = Object.keys(this_years_rounds)[j];
-                    if(this_years_rounds[round_id]["YEAR"] == years_played[i])
-                        addScorecardRow(years_played[i], this_years_rounds[round_id]["ROUND_NUM"], player_id, round_id);
+                    var round_id = Object.keys(rounds_ordered)[j];
+                    if(rounds_ordered[round_id]["YEAR"] == years_played[i])
+                        addScorecardRow(years_played[i], rounds_ordered[round_id]["ROUND_NUM"], player_id, round_id);
                 }
                 createStatSection(years_played[i], master_data[player_id]);
             }
@@ -97,19 +85,25 @@ function buildPlayerHeader(player_id)
                     var round = rounds[round_ids[i]];
                     if(round["YEAR"] == years[0])
                     {
-                        latest_round = latest_round > round["ROUND_NUM"] ? latest_round : round["ROUND_NUM"];
-                        var score = totalScore(round["SCORECARD"]);
-                        round_scores[round["ROUND_NUM"]] = score;
+                        if(round["ROUND_NUM"] > latest_round)
+                        {
+                            latest_round = round["ROUND_NUM"];
+                            round_scores = {};
+
+                            round_scores[round["ROUND_NUM"]] = {};
+                            round_scores[round["ROUND_NUM"]]["SCORE"] = totalScore(round["SCORECARD"]);
+                            round_scores[round["ROUND_NUM"]]["PAR"] = parForScorecard(round["SCORECARD"]);
+                        } 
                     }
                 }
-
-                if(round_scores[latest_round] < master_data[player_id][years[0]]["PAR"])
+                latest_round = Object.keys(round_scores)[0];
+                if(round_scores[latest_round]["SCORE"] < round_scores[latest_round]["PAR"])
                 {
                     today_div.classList += ' under'
-                    today_div.innerHTML = "-" + (master_data[player_id][years[0]]["PAR"] - round_scores[latest_round]);
-                }else if(round_scores[latest_round] > master_data[player_id][years[0]]["PAR"])
+                    today_div.innerHTML = "-" + (round_scores[latest_round]["PAR"] - round_scores[latest_round]["SCORE"]);
+                }else if(round_scores[latest_round]["SCORE"] > round_scores[latest_round]["PAR"])
                 {
-                    today_div.innerHTML = "+" + (round_scores[latest_round] - master_data[player_id][years[0]]["PAR"]);
+                    today_div.innerHTML = "+" + (round_scores[latest_round]["SCORE"] - round_scores[latest_round]["PAR"]);
                     today_div.classList += ' over';
                 }
                 else
@@ -343,10 +337,11 @@ function createStatTabs(year, player_data)
     round_button.innerHTML = 'Total';
     round_button.addEventListener('click', openChart);
     rounds_div.appendChild(round_button);
-    for(let i = 0; i < Object.keys(rounds).length; i++)
+    var rounds_ordered = orderRoundsByRoundNumForYear(rounds, year);
+    for(let i = 0; i < Object.keys(rounds_ordered).length; i++)
     {
         
-        var round = rounds[Object.keys(rounds)[i]];
+        var round = rounds_ordered[Object.keys(rounds_ordered)[i]];
         if(round["YEAR"] == year)
         {
             round_button = document.createElement('button');
@@ -372,6 +367,8 @@ function createGraphs(year, player_data)
     var wrapper_div = document.createElement('div');
     wrapper_div.className = 'tabStats';
     wrapper_div.id = year + "_total_graph";
+    wrapper_div.style.backgroundColor = 'white';
+    wrapper_div.style.border = '1px solid #d9d9d6';
     var canvas_wrapper = document.createElement('div');
     canvas_wrapper.className = 'canvasWrapper';
     var chart_canvas = document.createElement('canvas');
@@ -393,33 +390,36 @@ function createGraphs(year, player_data)
     for(let i = 0; i < Object.keys(rounds).length; i++)
     {
         round_id = Object.keys(rounds)[i];
-        var wrapper_div = document.createElement('div');
-        wrapper_div.className = 'tabStats';
-        wrapper_div.id = year + "_R" + rounds[round_id]["ROUND_NUM"] + "_graph";
-        var canvas_wrapper = document.createElement('div');
-        canvas_wrapper.className = 'canvasWrapper';
-        var chart_canvas = document.createElement('canvas');
-        chart_canvas.id = year + "_R" + rounds[round_id]["ROUND_NUM"] + "_graph";
-        chart_canvas.style.width = '400px';
-        chart_canvas.style.height = '400px';
-        chart_canvas.style.paddingLeft = '25px';
-        canvas_wrapper.appendChild(chart_canvas);
-        parent_div.appendChild(canvas_wrapper);
-        var legend_div = document.createElement('div');
-        legend_div.id = year + "_R" + rounds[round_id]["ROUND_NUM"] + "_legend";
-        legend_div.className = 'legend-con';
-        legend_div.style.paddingLeft = '150px';
-        wrapper_div.appendChild(canvas_wrapper);
-        wrapper_div.appendChild(legend_div);
-        parent_div.appendChild(wrapper_div);
-
-        var round_score =  getScoreTypes(rounds[round_id]["SCORECARD"]);
-        for(let j = 0; j < round_score.length; j++)
+        if(rounds[round_id]["YEAR"] == year)
         {
-            round_totals[j] = round_totals[j] + round_score[j];
+            var wrapper_div = document.createElement('div');
+            wrapper_div.className = 'tabStats';
+            wrapper_div.id = year + "_R" + rounds[round_id]["ROUND_NUM"] + "_graph";
+            var canvas_wrapper = document.createElement('div');
+            canvas_wrapper.className = 'canvasWrapper';
+            var chart_canvas = document.createElement('canvas');
+            chart_canvas.id = year + "_R" + rounds[round_id]["ROUND_NUM"] + "_graph";
+            chart_canvas.style.width = '400px';
+            chart_canvas.style.height = '400px';
+            chart_canvas.style.paddingLeft = '25px';
+            canvas_wrapper.appendChild(chart_canvas);
+            parent_div.appendChild(canvas_wrapper);
+            var legend_div = document.createElement('div');
+            legend_div.id = year + "_R" + rounds[round_id]["ROUND_NUM"] + "_legend";
+            legend_div.className = 'legend-con';
+            legend_div.style.paddingLeft = '150px';
+            wrapper_div.appendChild(canvas_wrapper);
+            wrapper_div.appendChild(legend_div);
+            parent_div.appendChild(wrapper_div);
+
+            var round_score =  getScoreTypes(rounds[round_id]["SCORECARD"]);
+            for(let j = 0; j < round_score.length; j++)
+            {
+                round_totals[j] = round_totals[j] + round_score[j];
+            }
+            var ctx = chart_canvas.getContext('2d');
+            generateChart(ctx, round_score, legend_div);
         }
-        var ctx = chart_canvas.getContext('2d');
-        generateChart(ctx, round_score, legend_div);
         
     }
 
@@ -527,5 +527,31 @@ function generateChart(ctx, round_score, legend_div)
 }
     });
     legend_div.innerHTML = chart.generateLegend();
+
+}
+
+function orderRoundsByRoundNumForYear(rounds_info, year)
+{
+    var this_years_rounds = [];
+    //Order rounds in the year by round num
+    for(let k = 0; k < Object.keys(rounds_info).length; k++)
+    {
+        var round_id = Object.keys(rounds_info)[k];
+        if(rounds_info[round_id]["YEAR"] == year)
+        {
+            var round_info = {};
+            round_info[round_id] = rounds_info[round_id];
+            this_years_rounds[rounds_info[round_id]["ROUND_NUM"]-1] = round_info;
+        }
+    }
+    var round_info = {};
+    for(let j = 0; j < this_years_rounds.length; j++)
+    {
+        var round_id = Object.keys(this_years_rounds[j])[0]; //I dont think you should ever do this, but here we ares
+        
+        round_info[round_id] = this_years_rounds[j][round_id];
+    }
+    return round_info;
+
 
 }

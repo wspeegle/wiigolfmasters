@@ -97,8 +97,7 @@ $(document).ready(function() {
                 console.log(`HELLO ${doc.id} => ${doc.data().first_name}`)
             );
         });
-
-    createScorecardBanner('leaderboard_table');
+    createScorecardBanner('leaderboard_table'); // db not defined??????
     // Import all player data using id
     // Insert data into table
     // Sort by TOTAL

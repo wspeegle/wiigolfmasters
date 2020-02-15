@@ -88,16 +88,19 @@ $(document).ready(function() {
     // Player object
     const playerObj = {};
 
-    // Grab each player id
-    let playersNameAndId = db
-        .collection('players')
-        .get()
-        .then(querySnapshot => {
-            querySnapshot.forEach((doc, i) =>
-                console.log(`HELLO ${doc.id} => ${doc.data().first_name}`)
-            );
-        });
-    createScorecardBanner('leaderboard_table'); // db not defined??????
+    // Get player
+    let players = db.collection('players');
+    console.log(players);
+    // Get current year
+    const CURRENT_YEAR = db.collection('current_year').get();
+    console.log(CURRENT_YEAR);
+    // Get rounds in current year
+    // Get player scores for current years rounds
+    // Compare to par
+    // Sort by lowest
+    // Insert into table
+
+    // createScorecardBanner('leaderboard_table'); // db not defined??????
     // Import all player data using id
     // Insert data into table
     // Sort by TOTAL

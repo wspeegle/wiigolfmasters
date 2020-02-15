@@ -98,18 +98,29 @@ $(document).ready(function() {
             });
             LEADERBOARD_OBJ['players'] = playersArray;
         });
+
     // Get current year
     const CURRENT_YEAR = db
         .collection('current_year')
         .doc('7WLtPHTN4hSokQ0qhOtP')
         .get()
         .then(doc => (LEADERBOARD_OBJ['current_year'] = doc.data().year));
-    console.log(LEADERBOARD_OBJ);
+
     // Get rounds in current year
+    const currentYearRounds = db
+        .collection('round')
+        .where('year', '==', 2020)
+        .get()
+        .then(data =>
+            data.forEach(round => {
+                console.log(round.data());
+            })
+        );
     // Get player scores for current years rounds
     // Compare to par
     // Sort by lowest
     // Insert into table
+    console.log(LEADERBOARD_OBJ);
 
     // createScorecardBanner('leaderboard_table'); // db not defined??????
     // Import all player data using id

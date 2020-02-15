@@ -85,9 +85,8 @@ $(document).ready(function() {
     // also utils line 294 (parforScorecard function) to get par for each round
     // total score function above ^^ (284)
     // Initialize Cloud Firestore through Firebase
-    // Player object to push all data
+    // Player object
     const playerObj = {};
-    const leaderboardTable = document.querySelector('.leaderboard_table');
 
     // Grab each player id
     let playersNameAndId = db
@@ -99,6 +98,7 @@ $(document).ready(function() {
             );
         });
 
+    createScorecardBanner('leaderboard_table');
     // Import all player data using id
     // Insert data into table
     // Sort by TOTAL

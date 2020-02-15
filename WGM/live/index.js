@@ -6,18 +6,20 @@
 // use scorecard_banner.js as guide
 // also utils line 294 (parforScorecard function) to get par for each round
 // total score function above ^^ (284)
-
+// Initialize Cloud Firestore through Firebase
 // Player object to push all data
 const playerObj = {};
-
+const leaderboardTable = document.querySelector('.leaderboard_table');
 // Grab each player id
-let playersNameAndId = db
+let playersNameAndId = firestore
     .collection('players')
     .get()
     .then(querySnapshot => {
-        querySnapshot.forEach((doc, i) => (playerObj[i] = doc.data()));
-        console.log('playerObj' + playerObj);
+        querySnapshot.forEach((doc, i) =>
+            console.log(`HELLO ${doc.id} => ${doc.data().first_name}`)
+        );
     });
+
 // Import all player data using id
 // Insert data into table
 // Sort by TOTAL

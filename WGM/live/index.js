@@ -85,15 +85,26 @@ $(document).ready(function() {
     // also utils line 294 (parforScorecard function) to get par for each round
     // total score function above ^^ (284)
     // Initialize Cloud Firestore through Firebase
-    // Player object
-    const playerObj = {};
+    const LEADERBOARD_OBJ = {};
 
-    // Get player
-    let players = db.collection('players');
-    console.log(players);
+    // Get players
+    let players = db
+        .collection('players')
+        .get()
+        .then(querySnapshot => {
+            let playersArray = [];
+            querySnapshot.forEach(doc => {
+                playersArray.push(doc.data());
+            });
+            LEADERBOARD_OBJ['players'] = playersArray;
+        });
     // Get current year
-    const CURRENT_YEAR = db.collection('current_year').get();
-    console.log(CURRENT_YEAR);
+    const CURRENT_YEAR = db
+        .collection('current_year')
+        .doc('7WLtPHTN4hSokQ0qhOtP')
+        .get()
+        .then(doc => (LEADERBOARD_OBJ['current_year'] = doc.data().year));
+    console.log(LEADERBOARD_OBJ);
     // Get rounds in current year
     // Get player scores for current years rounds
     // Compare to par

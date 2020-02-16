@@ -117,17 +117,18 @@ $(document).ready(function() {
                 })
             );
         // Get player scores for current years rounds
+
         const playerKeys = await Object.keys(data_obj.players);
         await playerKeys.forEach(player => {
             db.collectionGroup('player_score')
                 .where('player', '==', player)
                 .where('round', '==', data_obj.round_id)
                 .get()
-                .then(doc => {
-                    if (doc.data) {
-                        console.log(doc.data());
-                    }
-                });
+                .then(player_scores =>
+                    player_scores.forEach(player_data =>
+                        console.log(player_data)
+                    )
+                );
         });
         // Compare to par
         // Sort by lowest

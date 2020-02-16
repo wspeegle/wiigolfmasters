@@ -124,11 +124,13 @@ $(document).ready(function() {
                 .where('player', '==', player)
                 .where('round', '==', data_obj.round_id)
                 .get()
-                .then(player_scores =>
+                .then(player_scores => {
+                    // not returning any data - no idea why
+                    // console.log(player_scores.data());
                     player_scores.forEach(player_data =>
                         console.log(player_data)
-                    )
-                );
+                    );
+                });
         });
         // Compare to par
         // Sort by lowest

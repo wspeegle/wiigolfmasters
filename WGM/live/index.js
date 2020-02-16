@@ -92,11 +92,11 @@ $(document).ready(function() {
             .collection('players')
             .get()
             .then(querySnapshot => {
-                let playersArray = [];
+                let players_obj = {};
                 querySnapshot.forEach(doc => {
-                    playersArray.push(doc.data());
+                    players_obj[doc.id] = doc.data();
                 });
-                data_obj['players'] = playersArray;
+                data_obj['players'] = players_obj;
             });
 
         // Get current year
@@ -113,10 +113,13 @@ $(document).ready(function() {
             .get()
             .then(data =>
                 data.forEach(round => {
-                    data_obj['round_data'] = round.data();
+                    data_obj['round_id'] = round.id; // needs to return most recent
                 })
             );
         // Get player scores for current years rounds
+        await db
+            .collection('player_score')
+            .where('round', '==', data_obj.round_id);
         // Compare to par
         // Sort by lowest
         // Insert into table

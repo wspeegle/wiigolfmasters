@@ -85,43 +85,46 @@ $(document).ready(function() {
     // also utils line 294 (parforScorecard function) to get par for each round
     // total score function above ^^ (284)
     // Initialize Cloud Firestore through Firebase
-    const LEADERBOARD_OBJ = {};
-
-    // Get players
-    let players = db
-        .collection('players')
-        .get()
-        .then(querySnapshot => {
-            let playersArray = [];
-            querySnapshot.forEach(doc => {
-                playersArray.push(doc.data());
+    async function leaderboard_data() {
+        data_obj = {};
+        // Get players
+        await db
+            .collection('players')
+            .get()
+            .then(querySnapshot => {
+                let playersArray = [];
+                querySnapshot.forEach(doc => {
+                    playersArray.push(doc.data());
+                });
+                data_obj['players'] = playersArray;
             });
-            LEADERBOARD_OBJ['players'] = playersArray;
-        });
 
-    // Get current year
-    const CURRENT_YEAR = db
-        .collection('current_year')
-        .doc('7WLtPHTN4hSokQ0qhOtP')
-        .get()
-        .then(doc => (LEADERBOARD_OBJ['current_year'] = doc.data().year));
+        // Get current year
+        await db
+            .collection('current_year')
+            .doc('7WLtPHTN4hSokQ0qhOtP')
+            .get()
+            .then(doc => (data_obj['current_year'] = doc.data().year));
 
-    // Get rounds in current year
-    const currentYearRounds = db
-        .collection('round')
-        .where('year', '==', 2020)
-        .get()
-        .then(data =>
-            data.forEach(round => {
-                console.log(round.data());
-            })
-        );
-    // Get player scores for current years rounds
-    // Compare to par
-    // Sort by lowest
-    // Insert into table
-    console.log(LEADERBOARD_OBJ);
-
+        // Get rounds in current year
+        await db
+            .collection('round')
+            .where('year', '==', data_obj.current_year)
+            .get()
+            .then(data =>
+                data.forEach(round => {
+                    data_obj['round_data'] = round.data();
+                })
+            );
+        // Get player scores for current years rounds
+        // Compare to par
+        // Sort by lowest
+        // Insert into table
+        return data_obj;
+    }
+    (async () => {
+        console.log(await leaderboard_data());
+    })();
     // createScorecardBanner('leaderboard_table'); // db not defined??????
     // Import all player data using id
     // Insert data into table

@@ -117,13 +117,14 @@ $(document).ready(function() {
                 })
             );
         // Get player scores for current years rounds
-        await db
-            .collection('player_score')
-            .where('round', '==', data_obj.round_id)
-            .where('player', '==', data_obj.players)
-            .get()
-            .then(doc => console.log(doc));
-
+        const playerKeys = await Object.keys(data_obj.players);
+        playerKeys.forEach(player => {
+            db.collection('player_score')
+                .where('round', '==', data_obj.round_id)
+                .where('player', '==', player)
+                .get()
+                .then(doc => console.log(doc.data()));
+        });
         // Compare to par
         // Sort by lowest
         // Insert into table
@@ -131,6 +132,8 @@ $(document).ready(function() {
     }
     (async () => {
         console.log(await leaderboard_data());
+        // const data = await leaderboard_data();
+        // console.log(await Object.keys(data.players));
     })();
     // createScorecardBanner('leaderboard_table'); // db not defined??????
     // Import all player data using id

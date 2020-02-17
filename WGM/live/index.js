@@ -125,8 +125,12 @@ $(document).ready(function() {
                 .where('round', '==', data_obj.round_id)
                 .get()
                 .then(player_scores => {
-                    player_scores.forEach(player_data =>
-                        console.log(player_data.data())
+                    player_scores.forEach(
+                        player_data =>
+                            // console.log(player_data.data())
+                            (data_obj.players[player][
+                                'most_recent_score'
+                            ] = player_data.data().score)
                     );
                 });
         });

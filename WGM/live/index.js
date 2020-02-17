@@ -85,20 +85,66 @@ $(document).ready(function() {
     // also utils line 294 (parforScorecard function) to get par for each round
     // total score function above ^^ (284)
     // Initialize Cloud Firestore through Firebase
-    // Player object to push all data
-    const playerObj = {};
-    const leaderboardTable = document.querySelector('.leaderboard_table');
+    async function leaderboard_data() {
+        data_obj = {};
+        // Get players
+        await db
+            .collection('players')
+            .get()
+            .then(querySnapshot => {
+                let players_array = [];
+                querySnapshot.forEach(doc => {
+                    players_array[doc.id] = doc.data();
+                });
+                data_obj['players'] = players_array;
+            });
 
-    // Grab each player id
-    let playersNameAndId = db
-        .collection('players')
-        .get()
-        .then(querySnapshot => {
-            querySnapshot.forEach((doc, i) =>
-                console.log(`HELLO ${doc.id} => ${doc.data().first_name}`)
+        // Get current year
+        await db
+            .collection('current_year')
+            .doc('7WLtPHTN4hSokQ0qhOtP')
+            .get()
+            .then(doc => (data_obj['current_year'] = doc.data().year));
+
+        // Get rounds in current year
+        await db
+            .collection('round')
+            .where('year', '==', data_obj.current_year)
+            .get()
+            .then(data =>
+                data.forEach(round => {
+                    data_obj['round_id'] = round.id; // needs to return most recent
+                })
             );
-        });
+        // Get player scores for current years rounds
 
+        const playerKeys = await Object.keys(data_obj.players);
+        await playerKeys.forEach(player => {
+            db.collectionGroup('player_score')
+                .where('player', '==', player)
+                .where('round', '==', data_obj.round_id)
+                .get()
+                .then(player_scores => {
+                    player_scores.forEach(
+                        player_data =>
+                            // console.log(player_data.data())
+                            (data_obj.players[player][
+                                'most_recent_score'
+                            ] = player_data.data().score)
+                    );
+                });
+        });
+        // Compare to par
+        // Sort by lowest
+        // Insert into table
+        return data_obj;
+    }
+    (async () => {
+        console.log(await leaderboard_data());
+        // const data = await leaderboard_data();
+        // console.log(await Object.keys(data.players));
+    })();
+    // createScorecardBanner('leaderboard_table'); // db not defined??????
     // Import all player data using id
     // Insert data into table
     // Sort by TOTAL

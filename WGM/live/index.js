@@ -125,10 +125,8 @@ $(document).ready(function() {
                 .where('round', '==', data_obj.round_id)
                 .get()
                 .then(player_scores => {
-                    // not returning any data - no idea why
-                    // console.log(player_scores.data());
                     player_scores.forEach(player_data =>
-                        console.log(player_data)
+                        console.log(player_data.data())
                     );
                 });
         });

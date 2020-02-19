@@ -22,8 +22,8 @@ function buildPlayerPage(player_id)
                 if(years_played.indexOf(round_info["YEAR"]) == -1)
                     years_played[years_played.length] = round_info["YEAR"];
             }
-
             years_played = years_played.sort().reverse();
+            createBioSection(master_data[player_id], years_played);
 
             createYearTabs(years_played);
             for(let i = 0; i < years_played.length; i++)
@@ -367,8 +367,6 @@ function createGraphs(year, player_data)
     var wrapper_div = document.createElement('div');
     wrapper_div.className = 'tabStats';
     wrapper_div.id = year + "_total_graph";
-    wrapper_div.style.backgroundColor = 'white';
-    wrapper_div.style.border = '1px solid #d9d9d6';
     var canvas_wrapper = document.createElement('div');
     canvas_wrapper.className = 'canvasWrapper';
     var chart_canvas = document.createElement('canvas');
@@ -552,6 +550,57 @@ function orderRoundsByRoundNumForYear(rounds_info, year)
         round_info[round_id] = this_years_rounds[j][round_id];
     }
     return round_info;
+
+
+}
+
+function createBioSection(player_data, years_played)
+{
+    var bio_div = document.getElementById('bio');
+    bio_div.innerHTML = player_data["BIO"];
+    //append a table of years and finishes
+    var table = document.getElementById('past_results');
+    var rounds = player_data["ROUNDS"];
+    console.log(player_data);
+    for(let i = 0; i < years_played.length; i++)
+    {
+        //create a row for each year played and put some info in there
+        var year_info = player_data[years_played[i]];
+        var row = table.insertRow();
+        var c1 = row.insertCell();//year
+        c1.className = 'roundNo';
+        c1.innerHTML = years_played[i];
+        var c2 = row.insertCell();//position
+        c2.innerHTML = year_info["POSITION"];
+        c2.className = 'roundNo';
+        var c3 = row.insertCell();//round 1
+        c3.className = 'scoreNos';
+        var c4 = row.insertCell();//round 2
+        c4.className = 'scoreNos';
+        var c5 = row.insertCell();//round 3
+        c5.className = 'scoreNos';
+        var c6 = row.insertCell();//round 4
+        c6.className = 'scoreNos';
+        for(let j = 0; j < Object.keys(rounds).length; j++)
+        {
+            var round_info = player_data["ROUNDS"][Object.keys(rounds)[j]];
+            if(round_info["YEAR"] == years_played[i])
+            {
+                if(round_info["ROUND_NUM"] == 1)
+                    c3.innerHTML = totalScore(round_info["SCORECARD"]);
+                else if(round_info["ROUND_NUM"] == 2)
+                    c4.innerHTML = totalScore(round_info["SCORECARD"]);
+                else if(round_info["ROUND_NUM"] == 3)
+                    c5.innerHTML = totalScore(round_info["SCORECARD"]);
+                else if(round_info["ROUND_NUM"] == 4)
+                    c6.innerHTML = totalScore(round_info["SCORECARD"]);
+            }
+        }
+        var c7 = row.insertCell();//total
+        c7.className = 'scoreNos';
+        c7.innerHTML = year_info["TOTAL"];
+    }
+
 
 
 }

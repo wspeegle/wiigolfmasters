@@ -40,6 +40,7 @@ var getPlayerAndRoundData = function(years, callback)
                         master_data[m_d_keys[j]] = {};
                         master_data[m_d_keys[j]]["FIRST_NAME"] = m_d[m_d_keys[j]]["FIRST_NAME"];
                         master_data[m_d_keys[j]]["LAST_NAME"] = m_d[m_d_keys[j]]["LAST_NAME"];
+                        master_data[m_d_keys[j]]["BIO"] = m_d[m_d_keys[j]]["BIO"];
                         master_data[m_d_keys[j]]["ROUNDS"] = {};
                     }
                     var year = m_d[m_d_keys[j]]["YEAR"];
@@ -274,7 +275,7 @@ var getPlayerName = function(player_id)
             player[player_id] = {};
             player[player_id]["FIRST_NAME"]    = doc_data.first_name;
             player[player_id]["LAST_NAME"]     = doc_data.last_name;
-            // player["PIC_LINK"]      = doc_data.pic_link;
+            player[player_id]["BIO"]           = doc_data.bio;
             
             resolve(player);
         });

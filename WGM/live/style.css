@@ -1,6 +1,7 @@
 html, body {
     /* font-family: Arial, Helvetica, sans-serif; */
     font-family: "Tiempos Text", Times New Roman, serif;
+    /* font-family: Tahoma, Geneva, sans-serif !important; */
     margin: 0;
     padding: 0;
     height: 100%;
@@ -490,7 +491,8 @@ a {
 
 .player_card {
 
-    background-color: white
+    background-color: white;
+    margin-top: 5px;
 }
 
 .player_card td {
@@ -577,7 +579,7 @@ tr:last-child td:last-child {
 }
 
 .player_container {
-    width: 900px;
+    width: 950px;
     /* height: 80%; */
     text-align: center;
     align-content: center;
@@ -638,12 +640,13 @@ tr:last-child td:last-child {
 .player_header {
     position: relative;
     display: block;
-    width: 900px;
+    width: 950px;
     height: 265px;
     background-color: #076652;
     border: 1px solid lightgray;
     overflow:hidden;
     border-radius: 5px;
+    background-image: url("images/player_header.png");
     /* z-index: -1; */
 }
 
@@ -932,14 +935,13 @@ span.chart-legend {
     background-color: #009b77;
 }
 
-.tabstats {
+.tabStats {
     display: flex;
     width: 900px;
     height: 400px;
     margin: auto;
     background-color: white;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    margin-top: 15px;
 }
 
 /* The Modal (background) */

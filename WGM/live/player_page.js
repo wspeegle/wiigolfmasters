@@ -188,16 +188,16 @@ function createScoreCard(year)
     table.id = year+"_scorecard_table";
     var col_group = document.createElement('colgroup');
     var col = document.createElement('col');
-    col.style.width = '80px';
+    col.style.width = '81px';
     col_group.appendChild(col);
     for(let i = 1; i < 19; i++)
     {
         var col = document.createElement('col');
-        col.style.width = '41px';
+        col.style.width = '42px';
         col_group.appendChild(col);
     }
     var col = document.createElement('col');
-    col.style.width = '80px';
+    col.style.width = '81px';
     col_group.appendChild(col);
     table.appendChild(col_group);
     var hole_header = document.createElement('tr');

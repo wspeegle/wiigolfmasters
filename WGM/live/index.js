@@ -143,8 +143,9 @@ $(document).ready(function() {
         const data = await leaderboard_data();
         console.log(data);
         //Object.keys(data.players).forEach(key => console.log(key));
-        for (let player in data.players) {
-            console.log(Object.keys(data.players[player]));
+        for (const player in data.players) {
+            const keys = await Object.keys(data.players[player]);
+            console.log(keys);
         }
     })();
 

@@ -144,8 +144,7 @@ $(document).ready(function() {
         console.log(data);
         //Object.keys(data.players).forEach(key => console.log(key));
         for (let player in data.players) {
-            // console.log(data.players[player]);
-            totalScore(data.players[player]);
+            console.log(Object.keys(data.players[player]));
         }
     })();
 

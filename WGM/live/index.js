@@ -142,14 +142,15 @@ $(document).ready(function() {
     (async () => {
         const data = await leaderboard_data();
         console.log(data);
-        data.players.forEach(player => {
-            console.log('Howdy1');
-            totalScore(player);
-        });
+        //Object.keys(data.players).forEach(key => console.log(key));
+        for (let player in data.players) {
+            // console.log(data.players[player]);
+            totalScore(data.players[player]);
+        }
     })();
 
     function totalScore(player) {
-        console.log(player.most_recent_score);
+        console.log(player);
 
         // Object.keys(player.most_recent_score).reduce(
         //     (a, b) => a + parseFloat(player.most_recent_score[b] || 0),

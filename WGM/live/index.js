@@ -140,10 +140,22 @@ $(document).ready(function() {
         return data_obj;
     }
     (async () => {
-        console.log(await leaderboard_data());
-        // const data = await leaderboard_data();
-        // console.log(await Object.keys(data.players));
+        const data = await leaderboard_data();
+        console.log(data);
+        data.players.forEach(player => {
+            console.log('Howdy1');
+            totalScore(player);
+        });
     })();
+
+    function totalScore(player) {
+        console.log(player.most_recent_score);
+
+        // Object.keys(player.most_recent_score).reduce(
+        //     (a, b) => a + parseFloat(player.most_recent_score[b] || 0),
+        //     0
+        // );
+    }
     // createScorecardBanner('leaderboard_table'); // db not defined??????
     // Import all player data using id
     // Insert data into table

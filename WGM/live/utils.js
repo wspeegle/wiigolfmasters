@@ -64,7 +64,7 @@ var getPlayerAndRoundData = function(years, callback)
                             {
 
                                 if(master_data[a][years[0]] && master_data[b][years[0]])
-                                    return (master_data[a][years[0]]["TOTAL"]-master_data[b][years[0]]["TOTAL"])
+                                    return ((master_data[a][years[0]]["TOTAL"]-master_data[a][years[0]]["PAR"])-(master_data[b][years[0]]["TOTAL"]-master_data[b][years[0]]["PAR"]))
                             }).map(function(k)
                             {
                                 return k;
@@ -142,7 +142,7 @@ var getMasterDataForYear = function(year)
                             //How the hell do we account for missing the cut
                             var sorted = Object.keys(master_data).sort(function(a,b)
                             {
-                                return (master_data[a]["TOTAL"]-master_data[b]["TOTAL"])
+                                return ((master_data[a]["TOTAL"]-master_data[a]["PAR"]) - (master_data[b]["TOTAL"]-master_data[b]["PAR"]))
                             }).map(function(k)
                             {
                                 return k;
@@ -323,4 +323,15 @@ var getRounds = function()
             resolve(rounds);
         });
     });
+}
+
+function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
 }

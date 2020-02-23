@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/style.css" />
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="article.js"></script>
+<script type="text/javascript" src="scorecard_banner.js"></script>
+
+<html style='background-color: #f3f3f373;'>
+<title>Wii Golf Masters</title>
+
+<body>
+    <div class='leaderboard_holder'>
+        <div class='leaderboard' id='leaderboard'>
+        </div>
+
+
+    <div class='player_container'>
+        <div class='newsCard' id='article_card'>
+        <div id = 'article_media'></div>
+            
+            <div class='newsDescription' id = 'article_title'>
+                <br>
+                <br>
+            </div>
+            <div class='newsDate' id = 'article_date'>
+                <br>
+            </div>
+            <div class='newsText' id = 'article_text'>
+            </div>
+<br>
+<br>
+        </div>
+    </div>
+
+
+</div>
+</body>
+</html>
+<script>
+initializeFirebase();
+        var db = firebase.firestore();
+        createScorecardBanner("leaderboard");
+        var article_id = getQueryVariable("id");
+        //Build this page based on the player_id given
+        buildArticle(article_id);
+
+
+</script>

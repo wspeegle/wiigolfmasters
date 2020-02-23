@@ -1,13 +1,14 @@
 html, body {
     /* font-family: Arial, Helvetica, sans-serif; */
-    font-family: "Tiempos Text", Times New Roman, serif;
+    /* font-family: "Tiempos Text", Times New Roman, serif; */
     /* font-family: Tahoma, Geneva, sans-serif !important; */
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
     z-index: -1;
-    background-color: #f3f3f373
+  
 }
 
 @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
@@ -166,7 +167,7 @@ i {
 }
 
 .playerImage {
-    border-radius: 60px;
+    border-radius: 100%;
     width: 60px;
     height: 60px;
     border: 1px solid #076652;
@@ -192,7 +193,7 @@ i {
     color: #076652;
     font-size: 1.75em;
     padding-left: 25px;
-    font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif;
+    /* font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif; */
 }
 
 .leaderboard a {
@@ -208,7 +209,7 @@ a {
     color: #076652;
     font-size: 1em;
     padding-left: 25px;
-    font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif;
+    /* font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif; */
 }
 
 .main {
@@ -236,6 +237,8 @@ a {
     align-content: center;
     background-color: #f7f7f7;
     height: 60%;
+    border-radius:5px;
+    border:1px solid lightgrey;
 }
 
 .card img {
@@ -262,16 +265,18 @@ a {
     flex-grow: 1;
     flex-shrink: 0;
     position: relative;
-    z-index: -1;
+    /* z-index: -1; */
 }
 
 .containerItem {
     margin: 15px;
     /* margin-top: 15px; */
     width: 600px;
-    height: 500px;
+    height: 450px;
     background-color: white;
     text-align: center;
+    border-radius:5px;
+    border:1px solid lightgrey;
 }
 
 .containerItem a {
@@ -335,25 +340,25 @@ a {
 
 .newsDescription {
     padding-top: 5px;
-    font-size: 2em;
+    font-size: 2.75rem;
     text-align: left;
     color: #076652;
-    width: 75%;
-    margin: auto;
+    margin-left: 30px;
+
 }
 
 .newsDate {
     font-size: .9em;
     color: grey;
     text-align: left;
-    width: 75%;
-    margin: auto;
+    margin-left: 45px;
 }
 
 .newsText {
     padding-top: 5px;
-    width: 75%;
-    margin: auto;
+    margin-left: 45px;
+    margin-right: 45px;
+
     font-size: 1.2em;
     text-align: justify;
     line-height: 1.5em;
@@ -990,6 +995,49 @@ span.chart-legend {
     color: #000;
     text-decoration: none;
     cursor: pointer;
+}
+
+.player_tile{
+    margin: 15px;
+    /* margin-top: 15px; */
+    width: 300px;
+    height: 300px;
+    background-color: white;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid lightgrey;
+    padding-left: 0px;
+}
+
+.player_tile_name{
+    text-align: center;
+    color: #076652;
+    font-size: 2.25em;
+}
+
+.player_tile_years_played{
+    text-align:center;
+    font-size: .9em;
+    color: grey;
+}
+.player_tile_finish{
+    text-align:left;
+    padding-left:15px;
+    padding-top: 5px;
+    font-size: 1.25em;
+    color:grey;
+}
+
+
+.tee_time_card {
+    margin: 15px;
+    /* margin-top: 15px; */
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    text-align: center;
+    border-radius:5px;
+    border:1px solid lightgrey;
 }
 
 @media (max-device-width: 900px) {

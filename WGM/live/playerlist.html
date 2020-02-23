@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+<link rel="stylesheet" type="text/css" href="/style.css" />
+<script type="text/javascript" src="utils.js"></script>
+<script type="text/javascript" src="scorecard_banner.js"></script>
+<script type="text/javascript" src="playerlist.js"></script>
+
+<html>
+<title>Wii Golf Masters</title>
+
+<body>
+    <div class='leaderboard_holder'>
+        <div class='leaderboard' id='leaderboard'>
+        </div>
+    </div>
+    <div class='header'>
+        <img src="/images/wgm insta logo.png" height="75px">
+        <a href="/news.html">News</a>
+        <a href="/leaderboard.html">Leaders</a>
+        <a href="/playerlist.html">Players</a>
+        <!-- <a href="/index.html">Staff</a> -->
+    </div>
+    <div id='players_container' class='container2'>
+
+
+
+    </div>
+
+
+
+
+</html>
+
+<script>
+
+    initializeFirebase();
+    var db = firebase.firestore();
+    createScorecardBanner("leaderboard");
+    buildPlayerList('players_container');
+</script>

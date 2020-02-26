@@ -19,6 +19,8 @@
                 <div class='leaderboard' id='leaderboard'>
                 </div>
         </div>
+        <div class='header' id='header'></div>
+
         <div class="player_container">
                 <div class="player_header">
                         <div class='playerPic'>
@@ -95,8 +97,8 @@
                         <div id='scorecards'></div>
                         <div id='graphs'></div>
                 </div>
-
-
+                </div>
+                <div class='footer' id='footer'></div>
 </body>
 
 </html>
@@ -106,6 +108,8 @@
         initializeFirebase();
         var db = firebase.firestore();
         createScorecardBanner("leaderboard");
+        buildHeader('header');
+        buildFooter('footer');
         var player_id = getQueryVariable("player_id");
         //Build this page based on the player_id given
         buildPlayerPage(player_id);

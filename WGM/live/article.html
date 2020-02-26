@@ -18,6 +18,8 @@
     <div class='leaderboard_holder'>
         <div class='leaderboard' id='leaderboard'>
         </div>
+        <div class='header' id='header'></div>
+
 
 
     <div class='player_container'>
@@ -40,12 +42,17 @@
 
 
 </div>
+<div class='footer' id='footer'></div>
+
 </body>
 </html>
 <script>
 initializeFirebase();
         var db = firebase.firestore();
+        
         createScorecardBanner("leaderboard");
+        buildHeader('header');
+        buildFooter('footer');
         var article_id = getQueryVariable("id");
         //Build this page based on the player_id given
         buildArticle(article_id);

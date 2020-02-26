@@ -12,34 +12,31 @@
 <html>
 <title>Wii Golf Masters</title>
 <body>
+    
     <div class='leaderboard_holder'>
             <div class='leaderboard' id='leaderboard'>
             </div>
     </div>
-    <div class='header'>
-        <a href='/home.html'><img src="/images/wgm insta logo.png" height="75px"></a>
-        <a href="/news.html">News</a>
-        <a href="/leaderboard.html">Leaders</a>
-        <a href="/playerlist.html">Players</a>
-        <!-- <a href="/index.html">Staff</a> -->
-        <a href="/teetimes.html">Players</a>
-    </div>
-    <div class='article_container'>
+   <div class='header' id='header'></div>
+    <div class='article_container' style='padding-top:35px'>
         <div id = 'main_article_container' class='main'></div>
         <div id = 'article_container' class='container2'></div>
 
 
     </div>
 
-
-
+    <div class='footer' id='footer'></div>
+    </body>
 </html>
 
 <script>
 
     initializeFirebase();
     var db = firebase.firestore();
+    
     createScorecardBanner("leaderboard");
+    buildHeader('header');
+    buildFooter('footer');
     db.collection("article").orderBy('created_on', 'desc').get().then(function(querySnapshot)
     {
         var i = 0;

@@ -1,3 +1,5 @@
+var players_signed_up = [];
+
 function buildTeeTimes(parent_div_id)
 {
     var parent_div = document.getElementById(parent_div_id);
@@ -8,6 +10,7 @@ function buildTeeTimes(parent_div_id)
         var current_round = doc.data().round_num;
         db.collection('teetimes').where('year', '==', current_year).where('round_num', '==', current_round).get().then(function(querySnapshot)
         {
+            players_signed_up = [];
             querySnapshot.forEach(async function(doc)
             {
                 //build a new card for each tee time
@@ -27,6 +30,7 @@ function buildTeeTimes(parent_div_id)
                 tee_time_div.className = 'tee_time_card';
                 var tee_time_info_div = document.createElement('div');
                 tee_time_info_div.innerHTML = doc.data().time;
+                tee_time_info_div.className = 'tee_time';
                 tee_time_div.appendChild(tee_time_info_div);
                 var entry_table = document.createElement('table');
                 for(let i = 0; i < players.length; i++)
@@ -43,14 +47,18 @@ function buildTeeTimes(parent_div_id)
                         sign_up_button.innerHTML = 'Sign Up';
                         sign_up_button.onclick = async function()
                         {
-                            var user = firebase.auth().currentUser.displayName;
-                            if(user && players.indexOf(user) == -1)
+                            var user = firebase.auth().currentUser;
+                            if(user)
                             {
-                                await addUserToTeeTime(user, doc.id, i+1);
-                                buildTeeTimes(parent_div_id);
+                                if(players_signed_up.indexOf(user.displayName) == -1)
+                                {
+                                    await addUserToTeeTime(user.displayName, doc.id, i+1);
+                                    buildTeeTimes(parent_div_id);
+                                }
                             }else
                             {
-                                //need to show a popup telling them to login, probably have the log in button in 
+                                //need to show a popup telling them to login, probably have the log in button in
+                                signIn();
                             }
                         };
                         c2.appendChild(sign_up_button);
@@ -77,6 +85,7 @@ function buildTeeTimes(parent_div_id)
                     }else
                     {
                         c2.innerHTML = players[i];
+                        players_signed_up[players_signed_up.length] = players[i];
                     }
 
                 }

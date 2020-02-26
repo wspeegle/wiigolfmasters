@@ -335,3 +335,77 @@ function getQueryVariable(variable)
        }
        return(false);
 }
+
+
+function signIn()
+{
+    var provider = new firebase.auth.GoogleAuthProvider();
+    console.log('signinwithredirect');
+    firebase.auth().signInWithRedirect(provider);
+}
+
+function buildHeader(header_id)
+{
+    var header = document.getElementById(header_id);
+    var home = document.createElement('a');
+    home.href = '/home.html';
+    var logo = document.createElement('img');
+    logo.src = '/images/logo.png';
+    logo.style.height = '75px';
+    home.appendChild(logo);
+    var news = document.createElement('a');
+    news.innerHTML = 'News';
+    news.href='/news.html';
+    var leaders = document.createElement('a');
+    leaders.innerHTML = 'Leaders';
+    leaders.href='/leaderboard.html';
+    var players = document.createElement('a');
+    players.href='/playerlist.html';
+    players.innerHTML = 'Players';
+    var teetimes = document.createElement('a');
+    teetimes.innerHTML = 'Tee Times';
+    teetimes.href='/teetimes.html';
+    var watch = document.createElement('a');
+    watch.innerHTML = 'Watch';
+    watch.href='/watch.html';
+
+    header.appendChild(home);
+    header.appendChild(news);
+    // header.appendChild(leaders);
+    header.appendChild(players);
+    header.appendChild(teetimes);
+    header.appendChild(watch);
+
+}
+
+function buildFooter(footer_id)
+{
+    var footer = document.getElementById('footer');
+    var div = document.createElement('div');
+    var left = document.createElement('div');
+    
+    left.style.width = "100%";
+    left.style.textAlign = 'left';
+    var insta = document.createElement('a');
+    insta.href='https://www.instagram.com/wiigolfmasters';
+    insta.innerHTML = 'WGM';
+    left.appendChild(insta);
+    var right = document.createElement('span');
+    right.style.float = 'right';
+    right.style.paddingRight = '25px';
+    left.appendChild(right);
+    var contact = document.createElement('a');
+    contact.href = 'mailto:staff@wiigolfmasters.com';
+    contact.innerHTML = 'Contact';
+    right.appendChild(contact);
+    var admin = document.createElement('a');
+    admin.href = '/update_scorecard.html';
+    admin.innerHTML = 'Admin';
+    right.appendChild(admin);
+    
+    div.innerHTML = '&copy; wspeegle';
+    div.appendChild(left);
+    footer.appendChild(div);
+
+} 
+

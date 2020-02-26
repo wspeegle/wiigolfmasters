@@ -105,7 +105,7 @@
 
 <br><br><br>
         <!-- Add a placeholder for the Twitch embed -->
-    <div style='margin-top: 50px;' id="twitch-embed"></div>
+    
 
     <br><br><br><br><br><br>
     <div>
@@ -128,18 +128,31 @@
 
     </div>
 
-    <!-- Load the Twitch embed script -->
-    <!-- <script src="https://embed.twitch.tv/embed/v1.js"></script> -->
+    <br><br><br><br><br><br>
+    <div>
+        Teetime input: 
+        <br>
+        Year: <input type="text"  id="tee_time_year">
+        <br>
+        Round: <input type="text"  id = 'tee_time_round'>
+        <br>
+        Time: <input type="text" id = 'tee_time_time'>
+        <br>
+        <br>
+       
+        <input type="button" value='Add Article' onclick='addTeeTime()' style='float:right;' class="update_scorecard_button">
 
+
+    </div>
+
+    
+<!-- Load the Twitch embed script -->
+    <!--  -->
 </body>
 
 </html>
 <!-- <script type="text/javascript">
-    new Twitch.Embed("twitch-embed", {
-      width: 1500,
-      height: 500,
-      channel: "wiigolfmasters"
-    });
+    
   </script> -->
 
 <script>
@@ -475,6 +488,35 @@ function addArticle()
 
 
 }
+
+
+function addTeeTime()
+{
+    let tee_time_year_input = document.getElementById('tee_time_year');
+    let tee_time_time_input = document.getElementById('tee_time_time');
+    let tee_time_round_input = document.getElementById('tee_time_round');
+    
+
+    let tee_time_year = tee_time_year_input.value;
+    let tee_time_time = tee_time_time_input.value;
+    let tee_time_round = tee_time_round_input.value;
+
+   
+    db.collection('teetimes').add(
+        {
+            time: tee_time_time,
+            year: parseInt(tee_time_year),
+            round_num: parseInt(tee_time_round),
+            player_1: "",
+            player_2: "",
+            player_3: "",
+            player_4: ""
+        }
+    );
+
+
+}
+
 
 
   

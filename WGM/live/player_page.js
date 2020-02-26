@@ -1,13 +1,4 @@
-function getQueryVariable(variable)
-{
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-               var pair = vars[i].split("=");
-               if(pair[0] == variable){return pair[1];}
-       }
-       return(false);
-}
+
 
 function buildPlayerPage(player_id)
 {
@@ -293,17 +284,22 @@ function getScorecardRowScores(year, row_num, player_id, round_id)
                 var row_total = 0;
                 for (var i = 1; i < 19; i++)
                 {
-                    row.cells[i].children[0].innerHTML = score[i - 1];
-                    if(score[i-1] < par_array[i-1])
+                    var strokes = score[i-1] == '' ? 0 : score[i-1];
+                    row.cells[i].children[0].innerHTML = strokes;
+                    if(strokes == 0)
+                    {
+                        //do nothin
+                    }
+                    else if(strokes < par_array[i-1])
                     {
                         //birdie or eagle
-                        if(score[i-1] == par_array[i-1]-1)
+                        if(strokes == par_array[i-1]-1)
                         row.cells[i].children[0].className = 'birdie';
                         else
                         row.cells[i].children[0].className = 'eagle';
-                    }else if(score[i-1] > par_array[i-1])
+                    }else if(strokes > par_array[i-1])
                     {
-                        if(score[i-1] == par_array[i-1]+1)
+                        if(strokes == par_array[i-1]+1)
                         row.cells[i].children[0].className ='bogey';
                         else
                         row.cells[i].children[0].className = 'double_bogey';

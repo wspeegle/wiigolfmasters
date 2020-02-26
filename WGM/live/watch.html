@@ -7,23 +7,21 @@
 <link rel="stylesheet" type="text/css" href="/style.css" />
 <script type="text/javascript" src="utils.js"></script>
 <script type="text/javascript" src="scorecard_banner.js"></script>
-<script type="text/javascript" src="teetimes.js"></script>
+<script src="https://embed.twitch.tv/embed/v1.js"></script>
 
 <html>
 <title>Wii Golf Masters</title>
 <body>
+    
     <div class='leaderboard_holder'>
             <div class='leaderboard' id='leaderboard'>
             </div>
     </div>
-    <div class='header' id='header'></div>
+   <div class='header' id='header'></div>
 
-    <div id = 'tee_time_container' class='container2'>
-        
-
+    <div id = 'article_container' class='container2'>
+        <div style='margin-top: 50px;' id="twitch-embed"></div>
     </div>
-
-
     <div class='footer' id='footer'></div>
 </body>
 </html>
@@ -32,9 +30,15 @@
 
     initializeFirebase();
     var db = firebase.firestore();
+    
     createScorecardBanner("leaderboard");
     buildHeader('header');
     buildFooter('footer');
-    buildTeeTimes('tee_time_container');
+    new Twitch.Embed("twitch-embed", {
+      width: 900,
+      height: 500,
+      channel: "wiigolfmasters"
+    });
+    
 </script>
 

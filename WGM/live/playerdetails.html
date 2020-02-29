@@ -21,7 +21,7 @@
         </div>
         <div class='header' id='header'></div>
 
-        <div class="player_container">
+        <div class="player_container" style='opacity:0' id='player_details'>
                 <div class="player_header">
                         <div class='playerPic'>
                                 <img id='player_img' class='playerImage_big' width="60px" height="60px">
@@ -113,6 +113,7 @@
         var player_id = getQueryVariable("player_id");
         //Build this page based on the player_id given
         buildPlayerPage(player_id);
+
 
 
 

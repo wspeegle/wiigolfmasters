@@ -5,13 +5,8 @@ function buildArticle(article_id)
         var article_media = document.getElementById('article_media');
         if(article["TYPE"] == 'video')
         {
-            var video = document.createElement('video');
-            video.style.width = '100%';
-            video.controls = true;
-            var source = document.createElement('source');
-            source.type='Video/MP4';
-            source.src = article["MEDIA"];
-            video.appendChild(source);
+            var video = document.createElement('div');
+            video.innerHTML = article["MEDIA"];
             article_media.appendChild(video);
         }else
         {

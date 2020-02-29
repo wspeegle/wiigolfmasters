@@ -44,6 +44,7 @@
                     <col style="width: 41px">
                     <col style="width: 41px">
                     <col style="width: 80px">
+                    <col style="width: 41px">
                 </colgroup>
                 <tr>
                     <th class="holeNos">Hole</th>
@@ -66,6 +67,7 @@
                     <th class="holeNos">17</th>
                     <th class="holeNos">18</th>
                     <th class="holeNos">Total</th>
+                    <th class='holeNos'>Missed Cut</th>
                 </tr>
                 <tr>
                     <td class="parNos">Par</td>
@@ -221,6 +223,9 @@ function addRow(user_value)
     }
     //Total cell
     cell = row.insertCell();
+    cell = row.insertCell(); //missed cut checkbox
+    cell.innerHTML = '<input type="checkbox" id="'+row_num+'_cb">'
+
 
 
 
@@ -277,6 +282,7 @@ function updateScorecard()
         var userSelect              = document.getElementById('userSelect_' + (i + 1));
         var user_id                 = userSelect[userSelect.selectedIndex].value;
         var player_scores           = db.collection("player_score");
+        var check_box               = document.getElementById((i+1)+'_cb');
         
         //If we get a doc id back we will need to store it
         let player_score_doc_id = round_id + "_" + user_id;
@@ -301,7 +307,8 @@ function updateScorecard()
                 player: user_id,
                 round: round_id,
                 score: score,
-                par: par
+                par: par,
+                missed_cut: check_box.checked
             }, {merge:true});
     }
 
@@ -327,6 +334,7 @@ function getScorecardRowScores(select)
     var table                   = document.getElementById('update_scores');
     var db                      = firebase.firestore();
     var player_scores           = db.collection("player_score");
+    var check_box               = document.getElementById(row_num+"_cb");
     var players_round_scorecard = player_scores.where("player", '==', user_id).where("round", '==', round_id);
     players_round_scorecard.get().then(function(querySnapshot)
     {
@@ -348,6 +356,9 @@ function getScorecardRowScores(select)
                 row_total += isNaN(parseInt(row.cells[i].children[0].value)) ? 0 : parseInt(row.cells[i].children[0].value);
             }
             row.cells[19].innerHTML = row_total;
+            var missed_cut = doc.data().missed_cut;
+            if(missed_cut)
+                check_box.checked = true;
         })
     });
 }

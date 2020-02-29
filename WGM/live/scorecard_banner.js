@@ -63,6 +63,8 @@ function createLeaderboardCard(player_data, player_id, position, year)
     let holes_played = (player_data[year]["PAR"] / 72)*18;
     score_div.appendChild(score_span);
     var thru_div = document.createElement('div');
+    if(player_data[year]["MISSED_CUT"])
+        holes_played += " (MC)";
     thru_div.innerHTML = " Thru " + holes_played;
     thru_div.className = 'thru';
     score_div.appendChild(thru_div);

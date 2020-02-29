@@ -48,6 +48,7 @@ var getPlayerAndRoundData = function(years, callback)
                     master_data[m_d_keys[j]][year]["TOTAL"] = m_d[m_d_keys[j]]["TOTAL"];
                     master_data[m_d_keys[j]][year]["PAR"] = m_d[m_d_keys[j]]["PAR"];
                     master_data[m_d_keys[j]][year]["POSITION"] = m_d[m_d_keys[j]]["POSITION"];
+                    master_data[m_d_keys[j]][year]["MISSED_CUT"] = m_d[m_d_keys[j]]["MISSED_CUT"];
                     var rounds = m_d[m_d_keys[j]]["ROUNDS"];
                     var round_keys = Object.keys(rounds);
                     for(let k = 0; k < round_keys.length; k++)
@@ -122,8 +123,10 @@ var getMasterDataForYear = function(year)
                                 var player_rounds = {};
                                 if(player_id)
                                 {
+                                    var missed_cut = false;
                                     master_data[player_id]["TOTAL"] = player_scores_array[i][player_id]["TOTAL"];
                                     master_data[player_id]["PAR"] = player_scores_array[i][player_id]["PAR"];
+                                    master_data[player_id]["MISSED_CUT"] = player_scores_array[i][player_id]["MISSED_CUT"];
                                     
                                     for(let j = 0; j < Object.keys(player_scores_array[i][player_id]["ROUNDS"]).length; j++)
                                     {
@@ -166,6 +169,7 @@ var getMasterDataForYear = function(year)
                                     position_rank = i+1;
                                     position_text = position_rank;
                                 }
+                                
                                 master_data[sorted[i]]["POSITION"] = position_text;
                                 
                             }
@@ -229,6 +233,7 @@ var getPlayerTotalsforRounds = function(player, rounds)
         {
             var total = 0;
             var par   = 0;
+            var missed_cut = false;
             var player_rounds = {};
             querySnapshot.forEach(function(doc)
             {
@@ -239,10 +244,12 @@ var getPlayerTotalsforRounds = function(player, rounds)
                     par += doc_data.par;
                     player_rounds[doc_data.round] = {};
                     player_rounds[doc_data.round]["SCORECARD"] = doc_data.score;
+                    if(doc_data.missed_cut)
+                        missed_cut = true;
                 }
             });
 
-            player_totals[player] = {"TOTAL": total, "PAR": par, "ROUNDS": player_rounds};
+            player_totals[player] = {"TOTAL": total, "PAR": par, "ROUNDS": player_rounds, "MISSED_CUT": missed_cut};
             resolve(player_totals);
         });
         
@@ -344,6 +351,18 @@ function signIn()
     firebase.auth().signInWithRedirect(provider);
 }
 
+function signOut() {
+    firebase
+        .auth()
+        .signOut()
+        .then(function() {
+            // Sign-out successful.
+        })
+        .catch(function(error) {
+            // An error happened.
+        });
+}
+
 function buildHeader(header_id)
 {
     var header = document.getElementById(header_id);
@@ -351,7 +370,7 @@ function buildHeader(header_id)
     home.href = '/home.html';
     var logo = document.createElement('img');
     logo.src = '/images/logo.png';
-    logo.style.height = '75px';
+    logo.style.height = '60px';
     home.appendChild(logo);
     var news = document.createElement('a');
     news.innerHTML = 'News';

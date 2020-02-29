@@ -72,17 +72,26 @@ function buildPlayerTile(player_container_id, player_doc)
             description_div.className = 'player_tile_name';
             description_div.innerHTML = player_doc.data().first_name + " " + player_doc.data().last_name; 
             card.appendChild(description_div);
+            var bottom_text = document.createElement('div');
             var last_placing = document.createElement('div');
             last_placing.className = 'player_tile_finish'
+            last_placing.style.float = 'left';
+            last_placing.style.paddingLeft = '10px';
             if(years_played.length > 0)
                 last_placing.innerHTML = 'Last Finish: ' + master_data[player_doc.id][years_played[0]]["POSITION"];
             else //first year
                 last_placing.innerHTML = "Rookie";
-            card.appendChild(last_placing);
+            bottom_text.appendChild(last_placing);
             var another_stat = document.createElement('div');
             another_stat.className = 'player_tile_finish';
-            another_stat.innerHTML = 'Some other info';
-            card.appendChild(another_stat);
+            another_stat.style.float = 'right';
+            another_stat.style.paddingRight = '10px';
+            var last_score = round_scores[latest_round]["SCORE"] - round_scores[latest_round]["PAR"];
+            if(last_score == 0) last_score = 'E';
+            if(last_score > 0) last_score = '+'+last_score;
+            another_stat.innerHTML = 'Last Round: ' + last_score;
+            bottom_text.appendChild(another_stat);
+            card.appendChild(bottom_text);
             player_container.appendChild(card);
             card.href = '/playerdetails.html?player_id='+player_doc.id;
             

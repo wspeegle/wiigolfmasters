@@ -4,42 +4,40 @@ function buildPlayerPage(player_id)
 {
     buildPlayerHeader(player_id).then(function(master_data, sorted)
     {
-        
-            var years_played = [];
-            var rounds_info = master_data[player_id]["ROUNDS"];
-            for(let i = 0; i < Object.keys(rounds_info).length; i++)
+        var years_played = [];
+        var rounds_info = master_data[player_id]["ROUNDS"];
+        for(let i = 0; i < Object.keys(rounds_info).length; i++)
+        {
+            var round_info = rounds_info[Object.keys(rounds_info)[i]];
+            if(years_played.indexOf(round_info["YEAR"]) == -1)
+                years_played[years_played.length] = round_info["YEAR"];
+        }
+        years_played = years_played.sort().reverse();
+        createBioSection(master_data[player_id], years_played);
+
+        createYearTabs(years_played);
+        for(let i = 0; i < years_played.length; i++)
+        {
+            var rounds_ordered = orderRoundsByRoundNumForYear(rounds_info, years_played[i]);
+            createScoreCard(years_played[i]);
+            for(let j = 0; j < Object.keys(rounds_ordered).length; j++)
             {
-                var round_info = rounds_info[Object.keys(rounds_info)[i]];
-                if(years_played.indexOf(round_info["YEAR"]) == -1)
-                    years_played[years_played.length] = round_info["YEAR"];
+                var round_id = Object.keys(rounds_ordered)[j];
+                if(rounds_ordered[round_id]["YEAR"] == years_played[i])
+                    addScorecardRow(years_played[i], rounds_ordered[round_id]["ROUND_NUM"], player_id, round_id);
             }
-            years_played = years_played.sort().reverse();
-            createBioSection(master_data[player_id], years_played);
-
-            createYearTabs(years_played);
-            for(let i = 0; i < years_played.length; i++)
-            {
-                var rounds_ordered = orderRoundsByRoundNumForYear(rounds_info, years_played[i]);
-                createScoreCard(years_played[i]);
-                for(let j = 0; j < Object.keys(rounds_ordered).length; j++)
-                {
-                    var round_id = Object.keys(rounds_ordered)[j];
-                    if(rounds_ordered[round_id]["YEAR"] == years_played[i])
-                        addScorecardRow(years_played[i], rounds_ordered[round_id]["ROUND_NUM"], player_id, round_id);
-                }
-                createStatSection(years_played[i], master_data[player_id]);
-            }
-
-
-
-           
-            //first get all the rounds for the latest year
-            db.collection("current_year").doc('7WLtPHTN4hSokQ0qhOtP').get().then(function(doc)
-            {
-                document.getElementById(doc.data().year + "_tab").click();
-                document.getElementById(doc.data().year + "_total").click();
-            });
+            createStatSection(years_played[i], master_data[player_id]);
+        }
+    
+        db.collection("current_year").doc('7WLtPHTN4hSokQ0qhOtP').get().then(function(doc)
+        {
+            document.getElementById(doc.data().year + "_tab").click();
+            document.getElementById(doc.data().year + "_total").click();
+        });
         
+        var player_container = document.getElementById('player_details');
+        player_container.style.transition = 'opacity .5s ease-in-out';
+        player_container.style.opacity = '1';
     });
 }
 

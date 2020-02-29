@@ -2,7 +2,9 @@ html, body {
     /* font-family: Arial, Helvetica, sans-serif; */
     /* font-family: "Tiempos Text", Times New Roman, serif; */
     /* font-family: Tahoma, Geneva, sans-serif !important; */
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    /* font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; */
+    font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif;
+
     margin: 0;
     padding: 0;
     height: 100%;
@@ -82,7 +84,7 @@ html, body {
 }
 
 i {
-    border: solid #076652;
+    border: solid #407060;
     border-width: 0 4px 4px 0;
     display: inline-block;
     padding: 12px;
@@ -103,7 +105,7 @@ i {
 }
 
 .arrow_span {
-    color: #076652;
+    color: #407060;
     vertical-align: top;
     text-align: center;
     line-height: .7;
@@ -165,6 +167,8 @@ i {
     font-size: 1.1rem;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-family: "Tiempos Text", Times New Roman, serif;
+    letter-spacing: 0px;
 }
 
 .cardScore {
@@ -198,7 +202,7 @@ i {
     border-radius: 100%;
     width: 60px;
     height: 60px;
-    border: 1px solid #076652;
+    border: 1px solid #407060;
     margin-top: 3px;
 }
 
@@ -214,28 +218,69 @@ i {
     height: 60px;
     line-height: 60px;
     vertical-align: middle;
+    letter-spacing: 1px;
 }
 
 .header a {
     text-decoration: none;
-    color: #076652;
+    color: #407060;
     font-size: 1.5em;
     padding-left: 25px;
     vertical-align: middle;
     /* font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif; */
 }
 
+.watch_live {
+    display: inline-block;
+    height: 12px;
+    width: 12px;
+    background-color: red;
+    border-radius: 100%;
+    margin-left: 2px;
+    margin-bottom: 5px;
+    -webkit-animation: glowing 1500ms infinite;
+    -moz-animation: glowing 1500ms infinite;
+    -o-animation: glowing 1500ms infinite;
+    animation: glowing 1500ms infinite;
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+  @-webkit-keyframes glowing {
+    0% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+    50% { background-color: #FF0000; -webkit-box-shadow: 0 0 5px #FF0000; }
+    100% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @-moz-keyframes glowing {
+    0% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+    50% { background-color: #FF0000; -moz-box-shadow: 0 0 5px #FF0000; }
+    100% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @-o-keyframes glowing {
+    0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+    50% { background-color: #FF0000; box-shadow: 0 0 5px #FF0000; }
+    100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @keyframes glowing {
+    0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+    50% { background-color: #FF0000; box-shadow: 0 0 5px #FF0000; }
+    100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  }
+
 .leaderboard a {
     text-decoration: none;
-    color: #076652;
+    color: #407060;
     font-size: 1.5em;
     padding-left: 25px;
-    font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif;
+    /* font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif; */
+
 }
 
 a {
     text-decoration: none;
-    color: #076652;
+    color: #407060;
     font-size: 1em;
     padding-left: 25px;
     /* font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif; */
@@ -264,22 +309,41 @@ a {
 .card {
     text-align: center;
     align-content: center;
-    background-color: #f7f7f7;
+    /* background-color: #f7f7f7; */
     height: 60%;
     border-radius:5px;
-    border:1px solid lightgrey;
+    /* border:1px solid lightgrey; */
 }
 
 .card img {
-    border-bottom: 10px solid #076652;
+    /* border-bottom: 10px solid #407060; */
+    border-radius: 3px;
 }
 
 .description {
     padding-top: 5px;
-    font-size: 2.5em;
+    font-size: 2em;
     text-align: center;
-    color: #076652;
+    color: #407060;
+    padding-bottom:5px;
 }
+
+.article_info_wrapper
+{
+    padding-top: 5px;
+    text-align: center;
+    color: #407060;
+    width: 80%;
+    margin: auto;
+    position: relative;
+    margin-top: -50px;
+    background-color: #f7f7f7;
+    /* border: 1px solid lightgrey; */
+    border-radius: 3px;
+    box-shadow: 0 1px 15px 0 rgba(177,179,179,.75);
+    border-top: 5px solid #407060;
+}
+
 
 .container2 {
     margin-top: 10px;
@@ -325,13 +389,15 @@ a {
 
 .containerItem a {
     text-decoration: none;
-    color: #076652;
+    color: #407060;
     font-size: 1.25em;
     font-family: 'Benton Sans', BentonSans, Arial, Helvetica, sans-serif;
 }
 
 .containerItem img {
-    border-bottom: 7px solid #076652;
+    border-bottom: 7px solid #407060;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
 }
 
 .footer {
@@ -350,7 +416,7 @@ a {
     margin: auto;
     padding-top: 25px;
     text-align: center;
-    color: #076652;
+    color: #407060;
     font-size: 1.5em;
     padding-bottom:5px;
 }
@@ -360,8 +426,9 @@ a {
     color: grey;
     text-align: center;
     margin: auto;
+    padding-top:5px;
     /* width: 100%;
-    border-top: 5px solid #076652; */
+    border-top: 5px solid #407060; */
 }
 
 .vertical-text {
@@ -383,12 +450,27 @@ a {
     /* background-image: url('images/lb2.0.jpg'); */
 }
 
+.news_container
+{
+    width: 950px;
+    text-align: center;
+    align-content: center;
+    margin: auto;
+    z-index: 1;
+    margin-top: 15px;
+    background-color: white;
+    padding: 15px;
+    border-radius:5px;
+    margin-bottom:15px;
+    border:1px solid lightgrey;
+}
 .newsDescription {
-    padding-top: 5px;
+    padding-top: 10px;
     font-size: 2.75rem;
     text-align: left;
-    color: #076652;
-    margin-left: 30px;
+    color: #407060;
+    margin-left: 75px;
+    margin-right: 75px;
 
 }
 
@@ -396,17 +478,23 @@ a {
     font-size: .9em;
     color: grey;
     text-align: left;
-    margin-left: 45px;
+    margin-left: 75px;
 }
 
 .newsText {
     padding-top: 5px;
-    margin-left: 45px;
-    margin-right: 45px;
+    margin-left: 75px;
+    margin-right: 75px;
 
     font-size: 1.2em;
     text-align: justify;
     line-height: 1.5em;
+    letter-spacing: 0px;
+}
+
+iframe{
+    border-radius: 5px;
+    box-shadow: 0 1px 15px 0 rgba(177,179,179,.75);
 }
 
 .newsCard {
@@ -511,7 +599,7 @@ a {
     font-size: 18px;
     font-family: Tahoma, Geneva, sans-serif !important;
     ;
-    background-color: #076652;
+    background-color: #407060;
     color: #ffffff;
     text-align: center
 }
@@ -535,7 +623,7 @@ a {
 .bio_table .roundNo {
     font-size: 18px;
     font-family: Tahoma, Geneva, sans-serif !important;
-    color: #076652;
+    color: #407060;
     text-align: center
 }
 
@@ -565,7 +653,7 @@ a {
 .player_card .holeNos {
     font-size: 18px;
     font-family: Tahoma, Geneva, sans-serif !important;
-    background-color: #076652;
+    background-color: #407060;
     color: #ffffff;
     text-align: center
 }
@@ -587,7 +675,7 @@ a {
 .player_card .roundNo {
     font-size: 18px;
     font-family: Tahoma, Geneva, sans-serif !important;
-    color: #076652;
+    color: #407060;
     text-align: center
 }
 
@@ -662,14 +750,14 @@ tr:last-child td:last-child {
     padding: 14px 16px;
     transition: 0.3s;
     font-size: 1.25em;
-    color: #076652;
+    color: #407060;
     font-family: Tahoma, Geneva, sans-serif !important;
     margin-bottom: 3px;
 }
 
 .tab button:hover {
     background-color: #f7f7f7;
-    border: 1px solid #076652;
+    border: 1px solid #407060;
     border-radius: 5px;
 }
 
@@ -677,7 +765,7 @@ tr:last-child td:last-child {
 
 .tab button.active {
     background-color: #f7f7f7;
-    border: 1px solid #076652;
+    border: 1px solid #407060;
     border-radius: 5px;
 }
 
@@ -693,7 +781,7 @@ tr:last-child td:last-child {
     display: block;
     width: 950px;
     height: 265px;
-    background-color: #076652;
+    background-color: #407060;
     border: 1px solid lightgray;
     overflow:hidden;
     border-radius: 5px;
@@ -732,7 +820,7 @@ tr:last-child td:last-child {
     display: inline-block;
     bottom: 25px;
     font-size: 2.5em;
-    color: #076652;
+    color: #407060;
     padding-left: 225px;
     padding-top: 25px;
 }
@@ -962,7 +1050,7 @@ span.chart-legend {
     font-size: 30px;
     text-align: center;
     padding-top: 5px;
-    color: #076652;
+    color: #407060;
 }
 
 .tee_time_list {
@@ -975,7 +1063,7 @@ span.chart-legend {
 }
 
 .update_scorecard_button {
-    background-color: #076652;
+    background-color: #407060;
     border: none;
     color: #ffff;
     height: 52px;
@@ -1058,8 +1146,9 @@ span.chart-legend {
 
 .player_tile_name{
     text-align: center;
-    color: #076652;
+    color: #407060;
     font-size: 2.25em;
+    padding-top:15px;
 }
 
 .player_tile_years_played{
@@ -1070,9 +1159,10 @@ span.chart-legend {
 .player_tile_finish{
     text-align:left;
     /* padding-left:15px; */
-    padding-top: 41px;
+    padding-top: 25px;
     font-size: 1.25em;
     color:grey;
+    letter-spacing: 0px;
 }
 
 
@@ -1085,7 +1175,7 @@ span.chart-legend {
 
 .tee_time{
     font-size: 1.5rem;
-    color: #076652;
+    color: #407060;
 }
 
 .tee_time_card table {

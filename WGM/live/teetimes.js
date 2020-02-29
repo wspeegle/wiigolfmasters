@@ -29,7 +29,7 @@ function buildTeeTimes(parent_div_id)
                 var tee_time_div = document.createElement('div');
                 tee_time_div.className = 'tee_time_card';
                 var tee_time_info_div = document.createElement('div');
-                tee_time_info_div.innerHTML = "Round " + doc.data().round_num + " - " + doc.data().time + ":00 " + doc.data().ampm;
+                tee_time_info_div.innerHTML = /*"Round " + doc.data().round_num + */"Group " + doc.data().group + " - " + doc.data().time + ":00 " + doc.data().ampm;
                 tee_time_info_div.className = 'tee_time';
                 tee_time_div.appendChild(tee_time_info_div);
                 var entry_table = document.createElement('table');

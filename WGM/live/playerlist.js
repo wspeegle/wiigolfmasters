@@ -66,7 +66,7 @@ function buildPlayerTile(player_container_id, player_doc)
             card.appendChild(player_img);
             var date_div = document.createElement('div');
             date_div.className = 'player_tile_years_played';
-            date_div.innerHTML = years_played.join(' ');
+            date_div.innerHTML = years_played.join(' | ');
             card.appendChild(date_div);
             var description_div = document.createElement('div');
             description_div.className = 'player_tile_name';

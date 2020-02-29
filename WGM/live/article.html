@@ -7,6 +7,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/style.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="utils.js"></script>
 <script type="text/javascript" src="article.js"></script>
 <script type="text/javascript" src="scorecard_banner.js"></script>
@@ -22,7 +23,7 @@
 
 
 
-    <div class='player_container'>
+    <div class='news_container'>
         <div class='newsCard' id='article_card'>
         <div id = 'article_media'></div>
             
@@ -42,7 +43,6 @@
 
 
 </div>
-<div class='footer' id='footer'></div>
 
 </body>
 </html>
@@ -52,7 +52,6 @@ initializeFirebase();
         
         createScorecardBanner("leaderboard");
         buildHeader('header');
-        buildFooter('footer');
         var article_id = getQueryVariable("id");
         //Build this page based on the player_id given
         buildArticle(article_id);

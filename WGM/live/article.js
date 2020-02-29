@@ -55,18 +55,22 @@ function buildMainArticleTile(article_container_id, doc)
     article_thumbnail.style.width = '100%';
     article_thumbnail.src = doc.data().thumbnail;
     card.appendChild(article_thumbnail);
+    var info_wrapper = document.createElement('div');
+    info_wrapper.className = 'article_info_wrapper';
+
     var date_div = document.createElement('div');
     date_div.className = 'miniCardDate';
     var date_options = {year: 'numeric', month: 'long', day: 'numeric'};
     date_div.innerHTML = new Date(doc.data().created_on).toLocaleDateString('en-US', date_options);
-    card.appendChild(date_div);
+    info_wrapper.appendChild(date_div);
     var description_div = document.createElement('div');
     description_div.className = 'description';
     var description = document.createElement('a');
     description.href='/article.html?id='+doc.id;
     description.innerHTML = doc.data().title; 
     description_div.appendChild(description);
-    card.appendChild(description_div);
+    info_wrapper.appendChild(description_div);
+    card.appendChild(info_wrapper);
     article_container.appendChild(card);
 
 

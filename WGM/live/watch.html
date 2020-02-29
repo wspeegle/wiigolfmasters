@@ -5,6 +5,7 @@
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
 <link rel="stylesheet" type="text/css" href="/style.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script type="text/javascript" src="utils.js"></script>
 <script type="text/javascript" src="scorecard_banner.js"></script>
 <script src="https://embed.twitch.tv/embed/v1.js"></script>
@@ -22,7 +23,6 @@
     <div id = 'article_container' class='container2'>
         <div style='margin-top: 50px;' id="twitch-embed"></div>
     </div>
-    <div class='footer' id='footer'></div>
 </body>
 </html>
 
@@ -33,10 +33,9 @@
     
     createScorecardBanner("leaderboard");
     buildHeader('header');
-    buildFooter('footer');
     new Twitch.Embed("twitch-embed", {
-      width: 900,
-      height: 500,
+      width: 1160,
+      height: 464,
       channel: "wiigolfmasters"
     });
     

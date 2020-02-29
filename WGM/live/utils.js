@@ -363,7 +363,7 @@ function signOut() {
         });
 }
 
-function buildHeader(header_id)
+async function buildHeader(header_id)
 {
     var header = document.getElementById(header_id);
     var home = document.createElement('a');
@@ -385,46 +385,45 @@ function buildHeader(header_id)
     teetimes.innerHTML = 'Tee Times';
     teetimes.href='/teetimes.html';
     var watch = document.createElement('a');
-    watch.innerHTML = 'Watch';
+    var live = await isStreamLive();
+    if(live)
+    {
+        var live_div = document.createElement('div');
+        live_div.className = 'watch_live';
+        watch.appendChild(live_div);
+    }
+    var watch_text = document.createElement('span');
+    watch_text.innerHTML = 'Watch';
+    watch.appendChild(watch_text);
     watch.href='/watch.html';
+
+    var insta = document.createElement('a');
+    insta.href='https://www.instagram.com/wiigolfmasters';
+    insta.innerHTML = "Instagram";
+
+    //check to see if stream is live
+
 
     header.appendChild(home);
     header.appendChild(news);
     // header.appendChild(leaders);
     header.appendChild(players);
     header.appendChild(teetimes);
+    // header.appendChild(insta);
     header.appendChild(watch);
 
 }
 
-function buildFooter(footer_id)
+async function isStreamLive()
 {
-    var footer = document.getElementById('footer');
-    var div = document.createElement('div');
-    var left = document.createElement('div');
-    
-    left.style.width = "100%";
-    left.style.textAlign = 'left';
-    var insta = document.createElement('a');
-    insta.href='https://www.instagram.com/wiigolfmasters';
-    insta.innerHTML = 'WGM';
-    left.appendChild(insta);
-    var right = document.createElement('span');
-    right.style.float = 'right';
-    right.style.paddingRight = '25px';
-    left.appendChild(right);
-    var contact = document.createElement('a');
-    contact.href = 'mailto:staff@wiigolfmasters.com';
-    contact.innerHTML = 'Contact';
-    right.appendChild(contact);
-    var admin = document.createElement('a');
-    admin.href = '/update_scorecard.html';
-    admin.innerHTML = 'Admin';
-    right.appendChild(admin);
-    
-    div.innerHTML = '&copy; wspeegle';
-    div.appendChild(left);
-    footer.appendChild(div);
-
-} 
+    var live = false;
+    await $.ajax({ 
+        url:'https://api.twitch.tv/helix/streams?user_login=wiigolfmasters',
+        headers:{'Client-ID': 'jkg4izi3wxvtzu4ucegba25tx3emll'},
+        success:function(channel) { 
+              if(channel.data.length > 0) live = true;
+         },
+    });
+    return live;
+}
 

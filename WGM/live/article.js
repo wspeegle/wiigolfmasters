@@ -12,6 +12,7 @@ function buildArticle(article_id)
         {
             var img = document.createElement('img');
             img.src = article["MEDIA"];
+            img.style.width = '100%';
             article_media.appendChild(img);
         }
 
@@ -49,7 +50,9 @@ function getArticleInfo(article_id)
 function buildMainArticleTile(article_container_id, doc)
 {
     var article_container = document.getElementById(article_container_id);
-    var card = document.createElement('div');
+    var card = document.createElement('a');
+    card.href = '/article.html?id='+doc.id;
+    card.style.paddingLeft = '0px';
     card.className = 'card'
     var article_thumbnail = document.createElement('img');
     article_thumbnail.style.width = '100%';
@@ -79,7 +82,9 @@ function buildMainArticleTile(article_container_id, doc)
 function buildArticleTile(article_container_id, doc)
 {
     var article_container = document.getElementById(article_container_id);
-    var card = document.createElement('div');
+    var card = document.createElement('a');
+    card.href='/article.html?id='+doc.id;
+    card.style.paddingLeft = '0px';
     card.className = 'containerItem'
     var article_thumbnail = document.createElement('img');
     article_thumbnail.style.width = '100%';

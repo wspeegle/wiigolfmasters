@@ -427,3 +427,18 @@ async function isStreamLive()
     return live;
 }
 
+function createModalPopup(modal_text)
+{
+    var modal = document.createElement('div');
+    modal.id = 'popup_modal';
+    modal.className ='modal';
+    var modal_content = document.createElement('div');
+    modal_content.className = 'modal-content';
+    var modal_msg = document.createElement('p');
+    modal_msg.innerHTML = modal_text;
+    modal_content.appendChild(modal_msg);
+    modal.appendChild(modal_content);
+    document.children[0].appendChild(modal); 
+}
+
+

@@ -58,30 +58,11 @@ function buildTeeTimes(parent_div_id)
                             }else
                             {
                                 //need to show a popup telling them to login, probably have the log in button in
-                                signIn();
+                                createModalPopup("You need to sign in with a Google account to sign up for a tee time.<br><br><br> <button class='update_scorecard_button' onclick = 'signIn()'>Sign In</button> ");
+                                // signIn();
                             }
                         };
                         c2.appendChild(sign_up_button);
-                        // var user_select = document.createElement('select');
-                        // await db.collection("players").get().then(function(querySnapshot)
-                        // {
-                        //     var opt = document.createElement('option');
-                        //     opt.appendChild(document.createTextNode("-"));
-                        //     user_select.appendChild(opt);
-                        //     querySnapshot.forEach(function(doc)
-                        //     {
-                        //         var doc_data = doc.data();
-                        //         opt = document.createElement('option');
-                        //         opt.appendChild(document.createTextNode(doc_data.first_name + " " + doc_data.last_name));
-                        //         opt.value = doc.id;
-                        //         user_select.appendChild(opt);
-                        //     });
-                        // });
-                        // user_select.onchange = function(evt)
-                        // {
-                        //     evt.target;
-                        // };
-                        // c2.appendChild(user_select);
                     }else
                     {
                         c2.innerHTML = players[i];

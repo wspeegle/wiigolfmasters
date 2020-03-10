@@ -35,5 +35,16 @@
     createScorecardBanner("leaderboard");
     buildHeader('header');
     buildTeeTimes('tee_time_container');
+    window.onclick = function(event)
+    {
+    var modal = document.getElementById('popup_modal');
+    if(modal)
+    {
+        if (event.target == modal)
+        {
+            document.children[0].removeChild(modal)
+        }
+    }
+    }   
 </script>
 

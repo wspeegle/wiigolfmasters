@@ -1073,7 +1073,6 @@ span.chart-legend {
     color: #ffff;
     height: 52px;
     width: 116px;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .update_scorecard_button:hover {
@@ -1120,6 +1119,7 @@ span.chart-legend {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    text-align: center;
 }
 
 /* The Close Button */

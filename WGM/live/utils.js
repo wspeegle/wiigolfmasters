@@ -385,7 +385,7 @@ async function buildHeader(header_id)
     teetimes.innerHTML = 'Tee Times';
     teetimes.href='/teetimes.html';
     var watch = document.createElement('a');
-    var live = await isStreamLive();
+    var live = false; //await isStreamLive();
     if(live)
     {
         var live_div = document.createElement('div');

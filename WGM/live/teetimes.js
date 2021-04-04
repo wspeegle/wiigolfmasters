@@ -105,7 +105,7 @@ function addUserToTeeTime(user, tee_time_id, player_num)
         {
             db.collection('teetimes').doc(tee_time_id).set(
                 {
-                     player_1: user       
+                     player_4: user       
                 }, {merge:true}
             );
         }

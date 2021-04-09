@@ -159,7 +159,7 @@ var getMasterDataForYear = function(year)
                                 {
                                     //there is a tie we need to display that
                                     position_text = "T"+position_rank;                            
-                                }else if(i+1 < sorted.length && master_data[sorted[i]]["TOTAL"] == master_data[sorted[i+1]]["TOTAL"] && master_data[sorted[i]]["TOTAL"] != master_data[sorted[i-1]]["TOTAL"])
+                                }else if(i>0 && i+1 < sorted.length && master_data[sorted[i]]["TOTAL"] == master_data[sorted[i+1]]["TOTAL"] && master_data[sorted[i]]["TOTAL"] != master_data[sorted[i-1]]["TOTAL"])
                                 {//First score of a series of ties
                                     position_rank++;
                                     position_text = "T"+position_rank;
